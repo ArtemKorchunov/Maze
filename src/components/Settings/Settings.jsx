@@ -7,7 +7,12 @@ import { SettingsIcon, rotate360 } from "../Common/Styled";
 
 import SettingsContent from "./SettingsContent";
 
-const Settings = ({ modalToggler, modalVisible }) => {
+const Settings = ({
+  modalToggler,
+  modalVisible,
+  textareaValue,
+  setTextareaValue
+}) => {
   return (
     <>
       <Settings.Link onClick={modalToggler}>
@@ -19,7 +24,7 @@ const Settings = ({ modalToggler, modalVisible }) => {
         onRequestClose={modalToggler}
         ariaHideApp={false}
       >
-        <SettingsContent />
+        <SettingsContent value={textareaValue} setValue={setTextareaValue} />
       </Settings.Modal>
     </>
   );
@@ -42,6 +47,8 @@ Settings.Modal = styled(Modal)`
   width: 100%;
   max-width: 500px;
   height: 100%;
+  display: flex;
+  flex-direction: column;
   max-height: 500px;
   margin: auto;
   box-shadow: ${props => props.theme.shadow.gray};
@@ -54,7 +61,8 @@ Settings.Modal = styled(Modal)`
 
 Settings.propTypes = {
   modalToggler: PropTypes.func.isRequired,
-  modalVisible: PropTypes.bool.isRequired
+  modalVisible: PropTypes.bool.isRequired,
+  setTextareaValue: PropTypes.func.isRequired
 };
 
 export default Settings;

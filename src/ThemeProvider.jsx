@@ -1,9 +1,11 @@
 import React from "react";
 import { ThemeProvider } from "styled-components";
 
+import { baseColor } from "./constants";
+
 const theme = {
   colors: {
-    base: "#33B5FF"
+    base: baseColor
   },
   paddings: {
     sm: "0.5rem",

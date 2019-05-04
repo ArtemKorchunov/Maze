@@ -14,3 +14,5 @@ export const debounce = (f, ms) => {
     timer = setTimeout(onComplete, ms);
   };
 };
+
+export const splitByNewLine = str => str.split(/[\n\r|↵]/g);

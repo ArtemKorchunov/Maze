@@ -1,3 +1,7 @@
+import { SET_MAZE } from "./constants";
+import { splitByNewLine } from "../../utils";
+import * as R from "ramda";
+
 export const initialState = {
   rowLength: 0,
   colLength: 0,
@@ -10,8 +14,18 @@ export const initialState = {
 
 export const reducer = (state, action) => {
   switch (action.type) {
-    case "increment": {
-      return { ...state, count: state.count + 1, loading: false };
+    case SET_MAZE: {
+      const splitedArr = splitByNewLine(action.payload);
+
+      const colLength = splitedArr.length;
+      const maze = R.join("", splitedArr);
+      const rowLength = maze.length / colLength;
+
+      return R.mergeDeepRight(state, {
+        colLength,
+        rowLength,
+        maze
+      });
     }
     default: {
       return state;
