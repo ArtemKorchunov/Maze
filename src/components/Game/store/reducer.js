@@ -45,13 +45,14 @@ export const reducer = (state, action) => {
         if (vertex === SPACE || isHuman) {
           for (const direction of vertexDirections) {
             //Get connected vertex index
-
             const vertexIndex = direction.getConnectedIndex(index, rowLength);
             const hasDirection = direction.hasDirection(
               vertexIndex,
               rowLength,
               colLength
             );
+
+            //TODO refactor hasDirection duplication
             //Check if it is a tree
             if (maze[vertexIndex] !== TREE || !hasDirection) {
               //Check if it is not a border element
