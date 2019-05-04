@@ -8,7 +8,7 @@ import { vertexDirections } from "./utils";
 export const initialState = {
   rowLength: 0,
   colLength: 0,
-  maze: "",
+  maze: [],
   human: {
     direction: "",
     position: 0
@@ -24,7 +24,10 @@ export const reducer = (state, action) => {
       const splitedArr = splitByNewLine(action.payload);
 
       const colLength = splitedArr.length;
-      const maze = R.join("", splitedArr);
+      const maze = R.compose(
+        R.split(""),
+        R.join("")
+      )(splitedArr);
       const rowLength = maze.length / colLength;
 
       const graph = new Graph();
@@ -42,6 +45,7 @@ export const reducer = (state, action) => {
         if (vertex === SPACE || isHuman) {
           for (const direction of vertexDirections) {
             //Get connected vertex index
+
             const vertexIndex = direction.getConnectedIndex(index, rowLength);
             const hasDirection = direction.hasDirection(
               vertexIndex,
@@ -49,7 +53,7 @@ export const reducer = (state, action) => {
               colLength
             );
             //Check if it is a tree
-            if (maze[vertexIndex] !== TREE) {
+            if (maze[vertexIndex] !== TREE || !hasDirection) {
               //Check if it is not a border element
               if (hasDirection) {
                 connectedVertices = R.assoc(
@@ -62,21 +66,21 @@ export const reducer = (state, action) => {
                 exitNodes = R.append(index.toString(), exitNodes);
               }
             }
-          }
 
-          //Set human position
-          if (isHuman) {
-            human.position = index;
-            human.direction = isHuman.shape;
-          }
+            //Set human position
+            if (isHuman) {
+              human.position = index;
+              human.direction = isHuman.shape;
+            }
 
-          //Add to graph
-          graph.addVertex(index, connectedVertices);
+            //Add to graph
+            graph.addVertex(index, connectedVertices);
+          }
         }
       }
+      console.log(exitNodes);
       for (const exitNode of exitNodes) {
         const paths = graph.shortestPath(human.position.toString(), exitNode);
-        console.log(paths);
       }
 
       return R.mergeDeepRight(state, {
@@ -85,6 +89,7 @@ export const reducer = (state, action) => {
         maze,
         human
       });
+      break;
     }
     default: {
       return state;

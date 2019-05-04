@@ -8,8 +8,7 @@ import Maze from "../Maze";
 import Controllers from "../Controllers";
 import Settings from "../Settings";
 //Constants
-import { rectSize } from "./constants";
-import { baseColor } from "../../constants";
+import { rectSize, MAZE_COLORS } from "./constants";
 //Utils
 import { debounce } from "../utils";
 
@@ -46,9 +45,10 @@ const Game = () => {
           "You need to set Maze firstly !"
         ) : (
           <Maze
+            maze={maze}
             colLength={colLength}
             rowLength={rowLength}
-            rectColor={baseColor}
+            rectColors={MAZE_COLORS}
             rectSize={rectSize}
           />
         )

@@ -44,7 +44,7 @@ Settings.RotatedIcon = styled(SettingsIcon)`
 `;
 
 Settings.Modal = styled(Modal)`
-  width: 100%;
+  width: 100% !important;
   max-width: 500px;
   height: 100%;
   display: flex;

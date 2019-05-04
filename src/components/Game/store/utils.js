@@ -32,7 +32,7 @@ export const vertexDirections = [
       return index - 1;
     },
     hasDirection(index, rowLength) {
-      return index % rowLength !== 0;
+      return (index + 1) % rowLength !== 0;
     }
   }
 ];
