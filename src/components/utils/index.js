@@ -16,3 +16,5 @@ export const debounce = (f, ms) => {
 };
 
 export const splitByNewLine = str => str.split(/[\n\r|↵]/g);
+
+export { Graph } from "./shortestPath";
