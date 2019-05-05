@@ -1,3 +1,4 @@
+import { getDirectionGroup } from "../Game/store/utils";
 function PriorityQueue() {
   this._nodes = [];
 
@@ -21,30 +22,32 @@ function PriorityQueue() {
 /**
  * Pathfinding starts here
  */
-export function Graph() {
-  var INFINITY = 1 / 0;
-  this.vertices = {};
 
+export function Graph(mazeLength) {
+  var INFINITY = 1 / 0;
+  this.mazeLength = mazeLength;
+  this.vertices = {};
+  this.distances = {};
   this.addVertex = function(name, edges) {
     this.vertices[name] = edges;
   };
 
   this.shortestPath = function(start, finish) {
-    var nodes = new PriorityQueue(),
-      distances = {},
+    let nodes = new PriorityQueue(),
       previous = {},
       path = [],
       smallest,
       vertex,
       neighbor,
-      alt;
+      alt,
+      previousDirectionGroup;
 
     for (vertex in this.vertices) {
       if (vertex === start) {
-        distances[vertex] = 0;
+        this.distances[vertex] = 0;
         nodes.enqueue(0, vertex);
       } else {
-        distances[vertex] = INFINITY;
+        this.distances[vertex] = INFINITY;
         nodes.enqueue(INFINITY, vertex);
       }
 
@@ -65,15 +68,30 @@ export function Graph() {
         break;
       }
 
-      if (!smallest || distances[smallest] === INFINITY) {
+      if (!smallest || this.distances[smallest] === INFINITY) {
         continue;
       }
 
       for (neighbor in this.vertices[smallest]) {
-        alt = distances[smallest] + this.vertices[smallest][neighbor];
+        alt = this.distances[smallest] + this.vertices[smallest][neighbor];
 
-        if (alt < distances[neighbor]) {
-          distances[neighbor] = alt;
+        const smallestNum = Number(smallest);
+        const neighborNum = Number(neighbor);
+
+        previousDirectionGroup = getDirectionGroup(smallestNum, neighborNum);
+        if (smallest !== start) {
+          const currentDirectionGroup = getDirectionGroup(
+            smallestNum,
+            neighborNum
+          );
+          if (currentDirectionGroup !== previousDirectionGroup) {
+            alt += 2;
+          }
+        }
+
+        if (alt < this.distances[neighbor]) {
+          this.distances[neighbor] = alt;
+          // Need to
           previous[neighbor] = smallest;
 
           nodes.enqueue(alt, neighbor);

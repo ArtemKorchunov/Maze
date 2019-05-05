@@ -1,8 +1,9 @@
-import { Graph } from "../../utils";
 import { DIRECTION } from "../constants";
-export const vertexDirections = [
+import { HORIZONTAL, VERTICAL } from "../constants";
+
+export const vertexDirections = {
   //Top
-  {
+  [DIRECTION.TOP.name]: {
     getConnectedIndex(index, rowLength) {
       return index - rowLength;
     },
@@ -11,7 +12,7 @@ export const vertexDirections = [
     }
   },
   //Right
-  {
+  [DIRECTION.RIGHT.name]: {
     getConnectedIndex(index) {
       return index + 1;
     },
@@ -20,7 +21,7 @@ export const vertexDirections = [
     }
   },
   //Bottom
-  {
+  [DIRECTION.BOTTOM.name]: {
     getConnectedIndex(index, rowLength) {
       return index + rowLength;
     },
@@ -29,7 +30,7 @@ export const vertexDirections = [
     }
   },
   //Left
-  {
+  [DIRECTION.LEFT.name]: {
     getConnectedIndex(index) {
       return index - 1;
     },
@@ -37,11 +38,15 @@ export const vertexDirections = [
       return (index + 1) % rowLength !== 0;
     }
   }
-];
+};
+const rightConnectedIndex =
+  vertexDirections[DIRECTION.RIGHT.name].getConnectedIndex;
+const leftConnectedIndex =
+  vertexDirections[DIRECTION.LEFT.name].getConnectedIndex;
 
-const graph = new Graph();
-
-graph.addVertex("top", { left: 1, right: 1 });
-graph.addVertex("left", { top: 1, bottom: 1 });
-graph.addVertex("bottom", { left: 1, right: 1 });
-graph.addVertex("right", { bottom: 1, top: 1 });
+export const getDirectionGroup = (vertextIndex, connectedVertexIndex) => {
+  return rightConnectedIndex(vertextIndex) === connectedVertexIndex ||
+    leftConnectedIndex(vertextIndex) === connectedVertexIndex
+    ? VERTICAL
+    : HORIZONTAL;
+};

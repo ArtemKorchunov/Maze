@@ -1,7 +1,7 @@
 import * as R from "ramda";
 
 import { SET_MAZE } from "./constants";
-import { MAZE_SHAPES } from "../constants";
+import { MAZE_SHAPES, DIRECTION } from "../constants";
 import { splitByNewLine, Graph } from "../../utils";
 import { getDirectionMeta } from "../utils";
 import { vertexDirections } from "./utils";
@@ -35,16 +35,19 @@ export const reducer = (state, action) => {
       const graph = new Graph();
 
       let exitNodes = [];
-      const human = R.clone(state.human);
+      let human = R.clone(state.human);
+      let humanKeysByDirection = {};
 
       for (let index = 0; index < maze.length; index++) {
         const vertex = maze[index];
         const isHuman = getDirectionMeta(vertex);
 
         let connectedVertices = {};
+
         if (vertex === SPACE || isHuman) {
-          for (const direction of vertexDirections) {
-            //Get connected vertex index
+          for (const directionKey of Object.keys(vertexDirections)) {
+            const direction = vertexDirections[directionKey];
+
             const vertexIndex = direction.getConnectedIndex(index, rowLength);
             const hasDirection = direction.hasDirection(
               vertexIndex,
@@ -52,7 +55,6 @@ export const reducer = (state, action) => {
               colLength
             );
 
-            //TODO refactor hasDirection duplication
             //Check if it is a tree
             if (maze[vertexIndex] !== TREE || !hasDirection) {
               //Check if it is not a border element
@@ -66,21 +68,33 @@ export const reducer = (state, action) => {
                 //if it is border element that is " " it could be an exit
                 exitNodes = R.append(index.toString(), exitNodes);
               }
+              if (isHuman) {
+                humanKeysByDirection[directionKey] = vertexIndex;
+              }
             }
-
-            //Set human position
-            if (isHuman) {
-              human.position = index;
-              human.direction = isHuman.shape;
-            }
-
-            //Add to graph
-            graph.addVertex(index, connectedVertices);
           }
+          graph.addVertex(index, connectedVertices);
+        }
+        if (isHuman) {
+          human = R.clone(isHuman);
+          human.position = index;
+          human.direction = vertex;
         }
       }
+      for (const key of Object.keys(DIRECTION)) {
+        const { name, index } = DIRECTION[key];
 
-      let exitPaths = null;
+        const humanPosition = human.position;
+        const currentWeight = human.weight[index];
+        const connectedVertexIndex = humanKeysByDirection[name];
+        if (!connectedVertexIndex) continue;
+
+        graph.vertices[connectedVertexIndex][humanPosition] = currentWeight;
+
+        graph.vertices[humanPosition][connectedVertexIndex] = currentWeight;
+      }
+
+      let exitPaths = [];
       for (const exitNode of exitNodes) {
         exitPaths = R.append(
           graph
@@ -90,6 +104,8 @@ export const reducer = (state, action) => {
           exitPaths
         );
       }
+
+      console.log(graph, exitNodes, exitPaths);
 
       const shortestPath = exitPaths.reduce(
         (prevValue, arr) => Math.min(prevValue, arr.length),
@@ -105,6 +121,7 @@ export const reducer = (state, action) => {
         shortestPath
       });
     }
+
     default: {
       return state;
     }
