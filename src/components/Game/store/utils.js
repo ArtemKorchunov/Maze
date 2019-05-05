@@ -39,14 +39,9 @@ export const vertexDirections = {
     }
   }
 };
-const rightConnectedIndex =
-  vertexDirections[DIRECTION.RIGHT.name].getConnectedIndex;
-const leftConnectedIndex =
-  vertexDirections[DIRECTION.LEFT.name].getConnectedIndex;
 
 export const getDirectionGroup = (vertextIndex, connectedVertexIndex) => {
-  return rightConnectedIndex(vertextIndex) === connectedVertexIndex ||
-    leftConnectedIndex(vertextIndex) === connectedVertexIndex
-    ? VERTICAL
-    : HORIZONTAL;
+  return Math.abs(vertextIndex - connectedVertexIndex) === 1
+    ? HORIZONTAL
+    : VERTICAL;
 };

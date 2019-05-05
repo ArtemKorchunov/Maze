@@ -26,17 +26,18 @@ function PriorityQueue() {
 export function Graph(mazeLength) {
   var INFINITY = 1 / 0;
   this.mazeLength = mazeLength;
+  this.priorities = {};
   this.vertices = {};
-  this.distances = {};
   this.addVertex = function(name, edges) {
     this.vertices[name] = edges;
   };
+  this.nodes = new PriorityQueue();
 
   this.shortestPath = function(start, finish) {
-    let nodes = new PriorityQueue(),
-      previous = {},
+    let previous = {},
       path = [],
       smallest,
+      distances = {},
       vertex,
       neighbor,
       alt,
@@ -44,18 +45,18 @@ export function Graph(mazeLength) {
 
     for (vertex in this.vertices) {
       if (vertex === start) {
-        this.distances[vertex] = 0;
-        nodes.enqueue(0, vertex);
+        distances[vertex] = 0;
+        this.nodes.enqueue(0, vertex);
       } else {
-        this.distances[vertex] = INFINITY;
-        nodes.enqueue(INFINITY, vertex);
+        distances[vertex] = INFINITY;
+        this.nodes.enqueue(INFINITY, vertex);
       }
 
       previous[vertex] = null;
     }
 
-    while (!nodes.isEmpty()) {
-      smallest = nodes.dequeue();
+    while (!this.nodes.isEmpty()) {
+      smallest = this.nodes.dequeue();
 
       if (smallest === finish) {
         path = [];
@@ -68,34 +69,38 @@ export function Graph(mazeLength) {
         break;
       }
 
-      if (!smallest || this.distances[smallest] === INFINITY) {
+      if (!smallest || distances[smallest] === INFINITY) {
         continue;
       }
 
       for (neighbor in this.vertices[smallest]) {
-        alt = this.distances[smallest] + this.vertices[smallest][neighbor];
+        let points = 0;
 
         const smallestNum = Number(smallest);
         const neighborNum = Number(neighbor);
 
-        previousDirectionGroup = getDirectionGroup(smallestNum, neighborNum);
-        if (smallest !== start) {
+        if (smallest !== start && neighbor !== start) {
           const currentDirectionGroup = getDirectionGroup(
             smallestNum,
             neighborNum
           );
           if (currentDirectionGroup !== previousDirectionGroup) {
-            alt += 2;
+            points = 2;
           }
+        } else if (neighbor === start) {
+          this.priorities[start] = this.vertices[smallest][neighbor];
         }
 
-        if (alt < this.distances[neighbor]) {
-          this.distances[neighbor] = alt;
+        alt = distances[smallest] + this.vertices[smallest][neighbor] + points;
+        if (alt < distances[neighbor]) {
+          this.priorities[neighbor] = points;
+          distances[neighbor] = alt;
           // Need to
           previous[neighbor] = smallest;
 
-          nodes.enqueue(alt, neighbor);
+          this.nodes.enqueue(alt, neighbor);
         }
+        previousDirectionGroup = getDirectionGroup(smallestNum, neighborNum);
       }
     }
 
