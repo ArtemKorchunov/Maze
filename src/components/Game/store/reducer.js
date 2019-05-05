@@ -14,7 +14,8 @@ export const initialState = {
     direction: "",
     position: 0
   },
-  exitPaths: []
+  exitPaths: [],
+  shortestPath: null
 };
 
 const { TREE, SPACE } = MAZE_SHAPES;

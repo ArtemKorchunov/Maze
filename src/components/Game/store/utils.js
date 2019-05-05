@@ -1,3 +1,5 @@
+import { Graph } from "../../utils";
+import { DIRECTION } from "../constants";
 export const vertexDirections = [
   //Top
   {
@@ -36,3 +38,10 @@ export const vertexDirections = [
     }
   }
 ];
+
+const graph = new Graph();
+
+graph.addVertex("top", { left: 1, right: 1 });
+graph.addVertex("left", { top: 1, bottom: 1 });
+graph.addVertex("bottom", { left: 1, right: 1 });
+graph.addVertex("right", { bottom: 1, top: 1 });
