@@ -78,16 +78,30 @@ export const reducer = (state, action) => {
           }
         }
       }
-      console.log(exitNodes);
+
+      let exitPaths = null;
       for (const exitNode of exitNodes) {
-        const paths = graph.shortestPath(human.position.toString(), exitNode);
+        exitPaths = R.append(
+          graph
+            .shortestPath(human.position.toString(), exitNode)
+            .concat([human.position.toString()])
+            .reverse(),
+          exitPaths
+        );
       }
+
+      const shortestPath = exitPaths.reduce(
+        (prevValue, arr) => Math.min(prevValue, arr.length),
+        Infinity
+      );
 
       return R.mergeDeepRight(state, {
         colLength,
         rowLength,
         maze,
-        human
+        human,
+        exitPaths,
+        shortestPath
       });
     }
     default: {

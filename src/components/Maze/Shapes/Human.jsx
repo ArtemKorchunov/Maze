@@ -4,7 +4,7 @@ import useImage from "use-image";
 
 import { rotatePoint, getCoordsOriginWithOffset } from "./utils";
 import Square from "./Square";
-
+//TODO Add Prop types
 const Human = ({
   x,
   y,
