@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Group, Image } from "react-konva";
 import useImage from "use-image";
 
+import { rotatePoint, getCoordsOriginWithOffset } from "./utils";
 import Square from "./Square";
 
 const Human = ({
@@ -13,12 +14,30 @@ const Human = ({
   stroke,
   strokeWidth,
   imageUrl = "/human.svg",
-  imageSpace = 0.8
+  imageSpace = 0.7
 }) => {
   const [image] = useImage(imageUrl);
-  console.log(image);
+  const imageEl = useRef(null);
   const offset = size * ((1 - imageSpace) / 2);
+  //TODO Move to separate file logic with calculation of coordinates depending to deg
+  const topLeft = { x: -size / 2, y: -size / 2 };
+  const current = rotatePoint(topLeft, 0);
+  const rotated = rotatePoint(topLeft, rotation);
+  const dx = rotated.x - current.x,
+    dy = rotated.y - current.y;
+
+  const { x: originX, y: originY } = getCoordsOriginWithOffset(
+    x,
+    y,
+    offset,
+    rotation
+  );
+
   const sizeBySpace = size * imageSpace;
+
+  if (imageEl.current) {
+    imageEl.current.rotate(rotation);
+  }
 
   return (
     <Group>
@@ -32,10 +51,11 @@ const Human = ({
       />
       <Image
         image={image}
-        x={x + offset}
-        y={y + offset}
+        x={originX + dx}
+        y={originY + dy}
         width={sizeBySpace}
         height={sizeBySpace}
+        ref={imageEl}
       />
     </Group>
   );
