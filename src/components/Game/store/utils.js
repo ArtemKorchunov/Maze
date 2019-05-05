@@ -4,13 +4,13 @@ export const vertexDirections = [
     getConnectedIndex(index, rowLength) {
       return index - rowLength;
     },
-    hasDirection(index, rowLength) {
+    hasDirection(index) {
       return index > 0;
     }
   },
   //Right
   {
-    getConnectedIndex(index, rowLength) {
+    getConnectedIndex(index) {
       return index + 1;
     },
     hasDirection(index, rowLength) {
@@ -28,7 +28,7 @@ export const vertexDirections = [
   },
   //Left
   {
-    getConnectedIndex(index, rowLength) {
+    getConnectedIndex(index) {
       return index - 1;
     },
     hasDirection(index, rowLength) {

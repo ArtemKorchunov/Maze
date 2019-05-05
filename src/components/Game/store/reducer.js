@@ -3,6 +3,7 @@ import * as R from "ramda";
 import { SET_MAZE } from "./constants";
 import { MAZE_SHAPES } from "../constants";
 import { splitByNewLine, Graph } from "../../utils";
+import { getDirectionMeta } from "../utils";
 import { vertexDirections } from "./utils";
 
 export const initialState = {
@@ -16,7 +17,7 @@ export const initialState = {
   exitPaths: []
 };
 
-const { TREE, SPACE, HUMAN_DIRECTION } = MAZE_SHAPES;
+const { TREE, SPACE } = MAZE_SHAPES;
 
 export const reducer = (state, action) => {
   switch (action.type) {
@@ -37,9 +38,7 @@ export const reducer = (state, action) => {
 
       for (let index = 0; index < maze.length; index++) {
         const vertex = maze[index];
-        const isHuman = HUMAN_DIRECTION.find(
-          direction => direction.shape === vertex
-        );
+        const isHuman = getDirectionMeta(vertex);
 
         let connectedVertices = {};
         if (vertex === SPACE || isHuman) {
@@ -90,7 +89,6 @@ export const reducer = (state, action) => {
         maze,
         human
       });
-      break;
     }
     default: {
       return state;

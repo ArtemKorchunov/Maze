@@ -12,7 +12,8 @@
     "react-konva": "^16.8.6",
     "react-modal": "^3.8.1",
     "react-scripts": "3.0.0",
-    "styled-components": "^4.2.0"
+    "styled-components": "^4.2.0",
+    "use-image": "^1.0.3"
   },
   "scripts": {
     "start": "react-scripts start",

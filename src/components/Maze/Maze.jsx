@@ -1,21 +1,23 @@
 import React from "react";
-import { Stage, Layer, Rect } from "react-konva";
+import { Stage, Layer } from "react-konva";
 import PropTypes from "prop-types";
+
+import Shape from "./Shape";
 
 const Maze = ({ rowLength, colLength, rectSize, rectColors, maze }) => {
   return (
     <Stage width={rowLength * rectSize} height={colLength * rectSize}>
       <Layer>
         {maze.map((node, index) => (
-          <Rect
+          <Shape
             key={`rect-${index}-${node}`}
             x={(index % rowLength) * rectSize}
             y={Math.floor(index / rowLength) * rectSize}
-            width={rectSize}
-            height={rectSize}
-            fill={rectColors[node]}
+            size={rectSize}
+            colors={rectColors}
             stroke={"#fff"}
             strokeWidth={1}
+            node={node}
           />
         ))}
       </Layer>
