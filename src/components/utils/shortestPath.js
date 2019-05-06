@@ -41,6 +41,7 @@ export function Graph(mazeLength) {
       vertex,
       neighbor,
       previousDirectionGroup = {};
+    this.priorities[start] = {};
     this.alt = null;
 
     for (vertex in this.vertices) {
@@ -94,11 +95,18 @@ export function Graph(mazeLength) {
             points = 2;
           }
         } else if (neighbor === start) {
-          this.priorities[start] = this.vertices[smallest][neighbor];
+          console.log(
+            "priorities",
+            this.vertices[smallest][neighbor],
+            this.vertices
+          );
+          this.priorities[start][smallest] = this.vertices[smallest][neighbor];
         }
         this.alt =
           distances[smallest] + this.vertices[smallest][neighbor] + points;
+
         if (this.alt < distances[neighbor]) {
+          console.log();
           this.priorities[neighbor] = points;
           distances[neighbor] = this.alt;
 

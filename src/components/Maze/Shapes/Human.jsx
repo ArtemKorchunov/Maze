@@ -61,4 +61,4 @@ const Human = ({
   );
 };
 
-export default Human;
+export default React.memo(Human);

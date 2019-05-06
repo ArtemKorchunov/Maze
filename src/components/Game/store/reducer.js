@@ -119,6 +119,7 @@ export const reducer = (state, action) => {
         { position: human.position, direction: human.name.name },
         rowLength
       );
+      debugger;
       console.log(shortestExitPath, combinedVerteces);
       console.log(instructions);
       return R.mergeDeepRight(state, {

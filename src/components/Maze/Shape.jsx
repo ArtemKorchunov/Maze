@@ -20,6 +20,7 @@ const Shape = ({ node, x, y, size, colors, stroke, strokeWidth }) => {
       />
     );
   }
+  console.log(node);
   const { rotation } = getDirectionMeta(node);
   return (
     <Human

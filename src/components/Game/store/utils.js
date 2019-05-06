@@ -92,8 +92,12 @@ export const getInstruction = (combinedVerteces, human, rowLength) => {
   const getNextStep = i =>
     combinedVerteces.slice(i + 1).findIndex(vertex => vertex.priority !== 0);
   for (let i = 0; i < combinedVerteces.length; i++) {
-    const vertex = combinedVerteces[i];
+    let vertex = combinedVerteces[i];
     const nextVertex = combinedVerteces[i + 1];
+
+    if (i === 0)
+      combinedVerteces[i].priority =
+        combinedVerteces[i].priority[nextVertex.index];
 
     const currentPriority = vertex.priority;
 
