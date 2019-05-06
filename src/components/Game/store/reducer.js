@@ -94,6 +94,7 @@ export const reducer = (state, action) => {
 
       let shortestExitPath;
       let lowestWeight = Infinity;
+      let lowestPriorities = null;
 
       for (const exitNode of exitNodes) {
         const currentExitPath = graph
@@ -104,30 +105,29 @@ export const reducer = (state, action) => {
         if (graph.alt < lowestWeight) {
           lowestWeight = graph.alt;
           shortestExitPath = currentExitPath;
+          lowestPriorities = R.clone(graph.priorities);
         }
       }
       const combinedVerteces = shortestExitPath.reduce(
         (prevValue, path) => [
           ...prevValue,
-          { priority: graph.priorities[path], index: path }
+          { priority: lowestPriorities[path], index: path }
         ],
         []
       );
-
       const instructions = getInstruction(
         combinedVerteces,
         { position: human.position, direction: human.name.name },
         rowLength
       );
-      debugger;
-      console.log(shortestExitPath, combinedVerteces);
       console.log(instructions);
       return R.mergeDeepRight(state, {
         colLength,
         rowLength,
         maze,
         human,
-        shortestExitPath
+        shortestExitPath,
+        instructions
       });
     }
 
