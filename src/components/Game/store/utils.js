@@ -91,11 +91,23 @@ export const getInstruction = (combinedVerteces, human, rowLength) => {
 
   const getNextStep = i =>
     combinedVerteces.slice(i + 1).findIndex(vertex => vertex.priority !== 0);
-  for (let i = 0; i < combinedVerteces.length - 1; i++) {
+  for (let i = 0; i < combinedVerteces.length; i++) {
     const vertex = combinedVerteces[i];
     const nextVertex = combinedVerteces[i + 1];
 
     const currentPriority = vertex.priority;
+
+    if (!nextVertex) {
+      const nextDirection = getRotateDirection(
+        combinedVerteces[i - 1].index,
+        vertex.index,
+        rowLength
+      );
+
+      const rotation = getRotation(currentDirection, nextDirection);
+      instructions = [...instructions, rotation, 1];
+      break;
+    }
 
     const nextDirection = getRotateDirection(
       vertex.index,
@@ -120,6 +132,8 @@ export const getInstruction = (combinedVerteces, human, rowLength) => {
     } else if (currentPriority === 1) {
       currentInstruction = [nextStep];
     }
+
+    if (i === 0) currentInstruction[currentInstruction.length - 1] -= 1;
 
     instructions = [...instructions, ...currentInstruction];
     i = nextStep + i;

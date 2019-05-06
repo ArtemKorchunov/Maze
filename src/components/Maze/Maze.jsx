@@ -31,4 +31,4 @@ Maze.propTypes = {
   rectSize: PropTypes.number.isRequired
 };
 
-export default Maze;
+export default React.memo(Maze);

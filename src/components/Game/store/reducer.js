@@ -14,8 +14,7 @@ export const initialState = {
     direction: "",
     position: 0
   },
-  exitPaths: [],
-  shortestPath: null
+  shortestExitPath: null
 };
 
 const { TREE, SPACE } = MAZE_SHAPES;
@@ -93,38 +92,41 @@ export const reducer = (state, action) => {
         graph.vertices[humanPosition][connectedVertexIndex] = currentWeight;
       }
 
-      let exitPaths = [];
+      let shortestExitPath;
+      let lowestWeight = Infinity;
+
       for (const exitNode of exitNodes) {
-        exitPaths = R.append(
-          graph
-            .shortestPath(human.position.toString(), exitNode)
-            .concat([human.position.toString()])
-            .reverse(),
-          exitPaths
-        );
+        const currentExitPath = graph
+          .shortestPath(human.position.toString(), exitNode)
+          .concat([human.position.toString()])
+          .reverse();
+
+        if (graph.alt < lowestWeight) {
+          lowestWeight = graph.alt;
+          shortestExitPath = currentExitPath;
+        }
       }
-      const combinedVerteces = exitPaths[0].reduce(
+      const combinedVerteces = shortestExitPath.reduce(
         (prevValue, path) => [
           ...prevValue,
           { priority: graph.priorities[path], index: path }
         ],
         []
       );
-      console.log("exitPaths", exitNodes, exitPaths);
 
       const instructions = getInstruction(
         combinedVerteces,
         { position: human.position, direction: human.name.name },
         rowLength
       );
-      console.log(exitPaths, combinedVerteces);
-      console.log(instructions, graph);
+      console.log(shortestExitPath, combinedVerteces);
+      console.log(instructions);
       return R.mergeDeepRight(state, {
         colLength,
         rowLength,
         maze,
         human,
-        exitPaths
+        shortestExitPath
       });
     }
 
