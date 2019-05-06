@@ -56,7 +56,7 @@ export const reducer = (state, action) => {
               rowLength,
               colLength
             );
-            if (maze[vertexIndex] === TREE) continue;
+            if (maze[vertexIndex] === TREE && hasDirection) continue;
             //Check if it is not a border element
             if (hasDirection) {
               connectedVertices = R.assoc(
@@ -103,7 +103,6 @@ export const reducer = (state, action) => {
           exitPaths
         );
       }
-
       const combinedVerteces = exitPaths[0].reduce(
         (prevValue, path) => [
           ...prevValue,

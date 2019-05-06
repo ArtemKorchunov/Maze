@@ -104,7 +104,7 @@ export const getInstruction = (combinedVerteces, human, rowLength) => {
     );
 
     let nextStep = getNextStep(i);
-    if (nextStep === -1) break;
+    nextStep = nextStep === -1 ? combinedVerteces.length - i : nextStep;
 
     if (currentPriority === 3) {
       instructions.push([turnLeft, turnLeft, nextStep - i]);
@@ -112,6 +112,7 @@ export const getInstruction = (combinedVerteces, human, rowLength) => {
       const rotation = getRotation(currentDirection, nextDirection);
       const previousInstruction = instructions[instructions.length - 1];
       if (previousInstruction.length === 2) previousInstruction[1] += 1;
+
       instructions.push([rotation, nextStep]);
     } else if (currentPriority === 1) {
       instructions.push([nextStep]);
