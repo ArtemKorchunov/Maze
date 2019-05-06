@@ -6,12 +6,22 @@ import {
   IoIosSettings
 } from "react-icons/io";
 
-export const LeftArrow = styled(IoMdReturnLeft)`
+const TransformedArrowLeft = styled(IoMdReturnRight)`
+  transform: rotate(180deg);
+  padding: 8px;
+`;
+
+const TransformedArrowRight = styled(IoMdReturnLeft)`
+  transform: rotate(180deg);
+  padding: 8px;
+`;
+
+export const LeftArrow = styled(TransformedArrowLeft)`
   color: ${props => props.theme.colors.base};
   font-size: 2rem;
 `;
 
-export const RightArrow = styled(IoMdReturnRight)`
+export const RightArrow = styled(TransformedArrowRight)`
   color: ${props => props.theme.colors.base};
   font-size: 2rem;
 `;

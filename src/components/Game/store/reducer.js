@@ -114,7 +114,7 @@ export const reducer = (state, action) => {
 
       const instructions = getInstruction(
         combinedVerteces,
-        { position: human.position, direction: human.direction },
+        { position: human.position, direction: human.name.name },
         rowLength
       );
       console.log(exitPaths, combinedVerteces);

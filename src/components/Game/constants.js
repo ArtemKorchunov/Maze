@@ -7,17 +7,17 @@ export const DIRECTION = {
     name: "top",
     index: 0
   },
-  LEFT: {
-    name: "left",
+  RIGHT: {
+    name: "right",
     index: 1
   },
   BOTTOM: {
     name: "bottom",
-    index: 1
+    index: 2
   },
-  RIGHT: {
-    name: "right",
-    index: 1
+  LEFT: {
+    name: "left",
+    index: 3
   }
 };
 
