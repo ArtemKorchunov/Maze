@@ -41,7 +41,7 @@ export function Graph(mazeLength) {
       vertex,
       neighbor,
       alt,
-      previousDirectionGroup;
+      previousDirectionGroup = {};
 
     for (vertex in this.vertices) {
       if (vertex === start) {
@@ -72,25 +72,30 @@ export function Graph(mazeLength) {
       if (!smallest || distances[smallest] === INFINITY) {
         continue;
       }
-
+      previousDirectionGroup[smallest] = {};
       for (neighbor in this.vertices[smallest]) {
         let points = 0;
 
         const smallestNum = Number(smallest);
         const neighborNum = Number(neighbor);
-
+        previousDirectionGroup[smallest][neighbor] = getDirectionGroup(
+          smallestNum,
+          neighborNum
+        );
         if (smallest !== start && neighbor !== start) {
           const currentDirectionGroup = getDirectionGroup(
             smallestNum,
             neighborNum
           );
-          if (currentDirectionGroup !== previousDirectionGroup) {
+          if (
+            currentDirectionGroup !==
+            previousDirectionGroup[previous[smallest]][smallest]
+          ) {
             points = 2;
           }
         } else if (neighbor === start) {
           this.priorities[start] = this.vertices[smallest][neighbor];
         }
-
         alt = distances[smallest] + this.vertices[smallest][neighbor] + points;
         if (alt < distances[neighbor]) {
           this.priorities[neighbor] = points;
@@ -100,7 +105,6 @@ export function Graph(mazeLength) {
 
           this.nodes.enqueue(alt, neighbor);
         }
-        previousDirectionGroup = getDirectionGroup(smallestNum, neighborNum);
       }
     }
 

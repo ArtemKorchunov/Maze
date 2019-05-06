@@ -2,9 +2,9 @@ import * as R from "ramda";
 
 import { SET_MAZE } from "./constants";
 import { MAZE_SHAPES, DIRECTION } from "../constants";
-import { splitByNewLine, Graph } from "../../utils";
+import { splitByNewLine, Graph, isInteger } from "../../utils";
 import { getDirectionMeta } from "../utils";
-import { vertexDirections } from "./utils";
+import { vertexDirections, getInstruction } from "./utils";
 
 export const initialState = {
   rowLength: 0,
@@ -32,6 +32,8 @@ export const reducer = (state, action) => {
       )(splitedArr);
       const rowLength = maze.length / colLength;
 
+      if (R.not(isInteger(rowLength))) return state;
+
       const graph = new Graph();
 
       let exitNodes = [];
@@ -54,23 +56,20 @@ export const reducer = (state, action) => {
               rowLength,
               colLength
             );
-
-            //Check if it is a tree
-            if (maze[vertexIndex] !== TREE || !hasDirection) {
-              //Check if it is not a border element
-              if (hasDirection) {
-                connectedVertices = R.assoc(
-                  vertexIndex.toString(),
-                  1,
-                  connectedVertices
-                );
-              } else {
-                //if it is border element that is " " it could be an exit
-                exitNodes = R.append(index.toString(), exitNodes);
-              }
-              if (isHuman) {
-                humanKeysByDirection[directionKey] = vertexIndex;
-              }
+            if (maze[vertexIndex] === TREE) continue;
+            //Check if it is not a border element
+            if (hasDirection) {
+              connectedVertices = R.assoc(
+                vertexIndex.toString(),
+                1,
+                connectedVertices
+              );
+            } else {
+              //if it is border element that is " " it could be an exit
+              exitNodes = R.append(index.toString(), exitNodes);
+            }
+            if (isHuman) {
+              humanKeysByDirection[directionKey] = vertexIndex;
             }
           }
           graph.addVertex(index, connectedVertices);
@@ -105,20 +104,28 @@ export const reducer = (state, action) => {
         );
       }
 
-      console.log(graph, exitNodes, exitPaths);
-
-      const shortestPath = exitPaths.reduce(
-        (prevValue, arr) => Math.min(prevValue, arr.length),
-        Infinity
+      const combinedVerteces = exitPaths[0].reduce(
+        (prevValue, path) => [
+          ...prevValue,
+          { priority: graph.priorities[path], index: path }
+        ],
+        []
       );
+      console.log("exitPaths", exitNodes, exitPaths);
 
+      const instructions = getInstruction(
+        combinedVerteces,
+        { position: human.position, direction: human.direction },
+        rowLength
+      );
+      console.log(exitPaths, combinedVerteces);
+      console.log(instructions, graph);
       return R.mergeDeepRight(state, {
         colLength,
         rowLength,
         maze,
         human,
-        exitPaths,
-        shortestPath
+        exitPaths
       });
     }
 

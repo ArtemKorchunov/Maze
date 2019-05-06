@@ -16,5 +16,5 @@ export const debounce = (f, ms) => {
 };
 
 export const splitByNewLine = str => str.split(/[\n\r|↵]/g);
-
+export const isInteger = num => (num ^ 0) === num;
 export { Graph } from "./shortestPath";
