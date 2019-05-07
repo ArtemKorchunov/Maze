@@ -13,13 +13,13 @@ import { rectSize, MAZE_COLORS } from "./constants";
 import { debounce } from "../utils";
 
 import { reducer, initialState, SET_MAZE } from "./store";
-
+const dd = () => {};
 const Game = () => {
   // Maze reducer
-  const [{ maze, rowLength, colLength }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [
+    { maze, rowLength, colLength, step, instructions },
+    dispatch
+  ] = useReducer(reducer, initialState);
 
   // Actions
   const setMaze = debounce(value => {
@@ -39,7 +39,7 @@ const Game = () => {
 
   return (
     <GameView
-      headline="Maze navigator"
+      headline="Shortest maze navigator"
       maze={
         R.isEmpty(maze) ? (
           "You need to set Maze firstly !"
@@ -53,7 +53,7 @@ const Game = () => {
           />
         )
       }
-      controllers={<Controllers />}
+      controllers={<Controllers step={instructions[step]} action={dd} />}
       settings={
         <Settings
           modalVisible={modalVisible}

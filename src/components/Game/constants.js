@@ -21,6 +21,13 @@ export const DIRECTION = {
   }
 };
 
+export const INSTRUCTION = {
+  TURN_RIGHT: DIRECTION.RIGHT.name,
+  TURN_LEFT: DIRECTION.LEFT.name,
+  GO_ONE_STEP: "GO_ONE_STEP",
+  GO_MULTIPLE_STEPS: "GO_MULTIPLE_STEPS"
+};
+
 export const HORIZONTAL = "horizontal";
 export const VERTICAL = "vertical";
 

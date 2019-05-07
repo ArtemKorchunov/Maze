@@ -1,6 +1,6 @@
 import * as R from "ramda";
 
-import { SET_MAZE } from "./constants";
+import { SET_MAZE, MAKE_STEP } from "./constants";
 import { MAZE_SHAPES, DIRECTION } from "../constants";
 import { splitByNewLine, Graph, isInteger } from "../../utils";
 import { getDirectionMeta } from "../utils";
@@ -14,7 +14,9 @@ export const initialState = {
     direction: "",
     position: 0
   },
-  shortestExitPath: null
+  shortestExitPath: null,
+  instructions: [],
+  step: 0
 };
 
 const { TREE, SPACE } = MAZE_SHAPES;
@@ -120,15 +122,19 @@ export const reducer = (state, action) => {
         { position: human.position, direction: human.name.name },
         rowLength
       );
-      console.log(instructions);
       return R.mergeDeepRight(state, {
         colLength,
         rowLength,
         maze,
         human,
         shortestExitPath,
-        instructions
+        instructions,
+        step: 0
       });
+    }
+    case MAKE_STEP: {
+      const currentNode = action.payload;
+      const nextNode = state.shortestExitPath[state.step + 1];
     }
 
     default: {
