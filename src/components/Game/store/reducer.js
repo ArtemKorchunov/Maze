@@ -4,17 +4,18 @@ import { SET_MAZE, MAKE_STEP } from "./constants";
 import { MAZE_SHAPES, DIRECTION } from "../constants";
 import { splitByNewLine, Graph, isInteger } from "../../utils";
 import { getDirectionMeta } from "../utils";
-import { vertexDirections, getInstruction } from "./utils";
+import { vertexDirections, getInstruction, getRotateDirection } from "./utils";
 
 export const initialState = {
   rowLength: 0,
   colLength: 0,
   maze: [],
   human: {
-    direction: "",
+    shape: "",
     position: 0
   },
   shortestExitPath: null,
+  shortestPathStep: 0,
   instructions: [],
   step: 0
 };
@@ -62,7 +63,7 @@ export const reducer = (state, action) => {
             if (hasDirection) {
               connectedVertices = R.assoc(
                 vertexIndex.toString(),
-                1,
+                0,
                 connectedVertices
               );
             } else {
@@ -78,7 +79,6 @@ export const reducer = (state, action) => {
         if (isHuman) {
           human = R.clone(isHuman);
           human.position = index;
-          human.direction = vertex;
         }
       }
       for (const key of Object.keys(DIRECTION)) {
@@ -103,7 +103,6 @@ export const reducer = (state, action) => {
           .shortestPath(human.position.toString(), exitNode)
           .concat([human.position.toString()])
           .reverse();
-
         if (graph.alt < lowestWeight) {
           lowestWeight = graph.alt;
           shortestExitPath = currentExitPath;
@@ -133,8 +132,45 @@ export const reducer = (state, action) => {
       });
     }
     case MAKE_STEP: {
-      const currentNode = action.payload;
-      const nextNode = state.shortestExitPath[state.step + 1];
+      const shortestPathStep = state.shortestPathStep;
+      const shortestExitPath = state.shortestExitPath;
+      const currentNode = Number(shortestExitPath[shortestPathStep]);
+      const nextNode = Number(shortestExitPath[shortestPathStep + 1]);
+      const human = state.human;
+      const nextMaze = state.maze;
+
+      const nextDirection = getRotateDirection(
+        currentNode,
+        nextNode,
+        state.rowLength
+      );
+
+      let changedState = {};
+      if (nextDirection === human.name.name) {
+        const nextShortestPathStep = action.payload + state.shortestPathStep;
+
+        nextMaze[currentNode] = MAZE_SHAPES.SPACE;
+        nextMaze[shortestExitPath[nextShortestPathStep]] = human.shape;
+
+        changedState = {
+          shortestPathStep: nextShortestPathStep,
+          maze: nextMaze
+        };
+      } else {
+        const directionMeta = MAZE_SHAPES.HUMAN_DIRECTION.find(
+          direction => direction.name.name === nextDirection
+        );
+        nextMaze[currentNode] = directionMeta.shape;
+        changedState = {
+          maze: nextMaze,
+          human: {
+            ...directionMeta,
+            position: human.position
+          }
+        };
+      }
+
+      return R.mergeDeepRight(state, { ...changedState, step: state.step + 1 });
     }
 
     default: {

@@ -28,7 +28,7 @@ const controllers = [
   }
 ];
 
-const getCurrentInfo = (step, action) => {
+const getCurrentInfo = step => {
   if (step === INSTRUCTION.TURN_LEFT) {
     return { instruction: INSTRUCTION.TURN_LEFT, text: `Turn left` };
   }
@@ -59,7 +59,7 @@ const Controllers = ({ step, action }) => {
           if (controllerInstruction === currentInfo.instruction) {
             return (
               <Controller
-                key={`controller_${index}_`}
+                key={`controller_${index}`}
                 icon={<Icon />}
                 text={currentInfo.text}
                 onClick={() => action(step)}

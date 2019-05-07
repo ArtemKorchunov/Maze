@@ -12,8 +12,8 @@ import { rectSize, MAZE_COLORS } from "./constants";
 //Utils
 import { debounce } from "../utils";
 
-import { reducer, initialState, SET_MAZE } from "./store";
-const dd = () => {};
+import { reducer, initialState, SET_MAZE, MAKE_STEP } from "./store";
+
 const Game = () => {
   // Maze reducer
   const [
@@ -25,6 +25,9 @@ const Game = () => {
   const setMaze = debounce(value => {
     dispatch({ type: SET_MAZE, payload: value });
   }, 1000);
+  const makeStep = value => {
+    dispatch({ type: MAKE_STEP, payload: value });
+  };
 
   //Textarea state
   const [textareaValue, setTextareaValue] = useState("");
@@ -53,7 +56,7 @@ const Game = () => {
           />
         )
       }
-      controllers={<Controllers step={instructions[step]} action={dd} />}
+      controllers={<Controllers step={instructions[step]} action={makeStep} />}
       settings={
         <Settings
           modalVisible={modalVisible}

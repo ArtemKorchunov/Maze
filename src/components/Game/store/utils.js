@@ -119,10 +119,11 @@ export const getInstruction = (combinedVerteces, human, rowLength) => {
       nextVertex.index,
       rowLength
     );
-
     let nextStep = getNextStep(i);
     let currentInstruction = [];
     nextStep = nextStep === -1 ? combinedVerteces.length - i : nextStep;
+
+    console.log(nextDirection, nextStep + i);
 
     if (currentPriority === 3) {
       currentInstruction = [turnLeft, turnLeft, nextStep - i];
