@@ -45,7 +45,7 @@ Controllers.Wrap = styled.div`
 `;
 
 Controllers.propTypes = {
-  step: PropTypes.number,
+  step: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   action: PropTypes.func.isRequired
 };
 
