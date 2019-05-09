@@ -8,7 +8,7 @@ import { INSTRUCTION } from "../Game/constants";
 const controllers = [
   {
     Icon: UpArrow,
-    text: "Go 3 steps forward",
+    text: "Go some steps forward",
     instruction: INSTRUCTION.GO_MULTIPLE_STEPS
   },
   {

@@ -4,7 +4,12 @@ import { SET_MAZE, MAKE_STEP } from "./constants";
 import { MAZE_SHAPES, DIRECTION } from "../constants";
 import { splitByNewLine, Graph, isInteger } from "../../utils";
 import { getDirectionMeta } from "../utils";
-import { vertexDirections, getInstruction, getRotateDirection } from "./utils";
+import {
+  vertexDirections,
+  getInstruction,
+  getRotateDirection,
+  getRotationDeg
+} from "./utils";
 
 export const initialState = {
   rowLength: 0,
@@ -112,15 +117,17 @@ export const reducer = (state, action) => {
       const combinedVerteces = shortestExitPath.reduce(
         (prevValue, path) => [
           ...prevValue,
-          { priority: lowestPriorities[path], index: path }
+          { priority: lowestPriorities[path], path }
         ],
         []
       );
       const instructions = getInstruction(
         combinedVerteces,
-        { position: human.position, direction: human.name.name },
+        { path: human.position, direction: human.name.name },
         rowLength
       );
+      console.log(instructions);
+      console.log(combinedVerteces);
       return R.mergeDeepRight(state, {
         colLength,
         rowLength,
@@ -157,8 +164,10 @@ export const reducer = (state, action) => {
           maze: nextMaze
         };
       } else {
+        const nextRotationDeg = getRotationDeg(human.rotation, action.payload);
+
         const directionMeta = MAZE_SHAPES.HUMAN_DIRECTION.find(
-          direction => direction.name.name === nextDirection
+          direction => direction.rotation === nextRotationDeg
         );
         nextMaze[currentNode] = directionMeta.shape;
         changedState = {
