@@ -178,6 +178,9 @@ export const reducer = (state, action) => {
         { path: human.position, direction: human.name.name },
         rowLength
       );
+
+      toast.success("Your maze is drawn!");
+
       return R.mergeDeepRight(initialState, {
         colLength,
         rowLength,
