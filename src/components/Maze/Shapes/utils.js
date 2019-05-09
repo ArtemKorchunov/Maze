@@ -29,6 +29,8 @@ export const getCoordsOriginWithOffset = (x, y, offset, rotate) => {
         y: y - offset
       };
     default:
-      throw new Error("Rotation is not mentioned");
+      throw new Error(
+        `Rotation is not mentioned x:${x} y:${y} offset: ${offset} rotate:${rotate}`
+      );
   }
 };

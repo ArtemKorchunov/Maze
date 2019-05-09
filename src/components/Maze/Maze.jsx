@@ -4,7 +4,14 @@ import PropTypes from "prop-types";
 
 import Shape from "./Shape";
 
-const Maze = ({ rowLength, colLength, rectSize, rectColors, maze }) => {
+const Maze = ({
+  rowLength,
+  colLength,
+  rectSize,
+  rectColors,
+  maze,
+  directions
+}) => {
   return (
     <Stage width={rowLength * rectSize} height={colLength * rectSize}>
       <Layer>
@@ -13,6 +20,7 @@ const Maze = ({ rowLength, colLength, rectSize, rectColors, maze }) => {
             key={`rect-${index}-${node}`}
             x={(index % rowLength) * rectSize}
             y={Math.floor(index / rowLength) * rectSize}
+            direction={directions[index]}
             size={rectSize}
             colors={rectColors}
             stroke={"#fff"}

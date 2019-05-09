@@ -17,7 +17,7 @@ import { reducer, initialState, SET_MAZE, MAKE_STEP } from "./store";
 const Game = () => {
   // Maze reducer
   const [
-    { maze, rowLength, colLength, step, instructions },
+    { maze, rowLength, colLength, step, instructions, directions },
     dispatch
   ] = useReducer(reducer, initialState);
 
@@ -49,6 +49,7 @@ const Game = () => {
         ) : (
           <Maze
             maze={maze}
+            directions={directions}
             colLength={colLength}
             rowLength={rowLength}
             rectColors={MAZE_COLORS}

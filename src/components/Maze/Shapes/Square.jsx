@@ -1,17 +1,20 @@
 import React from "react";
-import { Rect } from "react-konva";
+import { Rect, Group } from "react-konva";
 
-const RectShape = ({ size, color, stroke = "#fff", x, y }) => {
+const RectShape = ({ size, color, line, stroke = "#fff", x, y }) => {
   return (
-    <Rect
-      x={x}
-      y={y}
-      width={size}
-      height={size}
-      fill={color}
-      stroke={stroke}
-      strokeWidth={1}
-    />
+    <Group>
+      <Rect
+        x={x}
+        y={y}
+        width={size}
+        height={size}
+        fill={color}
+        stroke={stroke}
+        strokeWidth={1}
+      />
+      {line}
+    </Group>
   );
 };
 

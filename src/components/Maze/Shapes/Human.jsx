@@ -13,6 +13,7 @@ const Human = ({
   size,
   stroke,
   strokeWidth,
+  line,
   imageUrl = "/human.svg",
   imageSpace = 0.7
 }) => {
@@ -49,6 +50,7 @@ const Human = ({
         stroke={stroke}
         strokeWidth={strokeWidth}
       />
+      {line}
       <Image
         image={image}
         x={originX + dx}

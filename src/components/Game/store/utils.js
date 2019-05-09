@@ -47,7 +47,6 @@ export const getDirectionGroup = (vertextIndex, connectedVertexIndex) => {
 };
 
 export const getRotateDirection = (step, nextStep, rowLength) => {
-  console.log(nextStep - step);
   switch (nextStep - step) {
     case 1:
       return DIRECTION.RIGHT.name;
@@ -58,7 +57,9 @@ export const getRotateDirection = (step, nextStep, rowLength) => {
     case -rowLength:
       return DIRECTION.TOP.name;
     default:
-      throw new Error("Something went wrong");
+      throw new Error(
+        `Something went wrong with step: ${step} nextStep:${nextStep} rowLength:${rowLength}`
+      );
   }
 };
 
@@ -121,6 +122,21 @@ export const getFirstVertexInstruction = (
   }
 };
 
+const reverseDirection = direction => {
+  switch (direction) {
+    case TOP:
+      return BOTTOM;
+    case BOTTOM:
+      return TOP;
+    case LEFT:
+      return RIGHT;
+    case RIGHT:
+      return LEFT;
+    default:
+      throw new Error(`Value is not available ${direction}`);
+  }
+};
+
 export const getInstruction = (combinedVerteces, human, rowLength) => {
   let currentDirection = getRotateDirection(
     combinedVerteces[0].path,
@@ -133,18 +149,36 @@ export const getInstruction = (combinedVerteces, human, rowLength) => {
     human.direction,
     currentDirection
   );
+  const directionGroup = getDirectionGroup(
+    combinedVerteces[0].path,
+    combinedVerteces[1].path
+  );
 
   const nextVertexIndex = instructions[instructions.length - 1];
 
-  for (let i = nextVertexIndex; i < combinedVerteces.length - 1; i++) {
+  let directions = {};
+
+  for (let i = 0; i < nextVertexIndex; i++) {
+    directions[combinedVerteces[i].path] = directionGroup;
+  }
+  const verticesLength = combinedVerteces.length;
+  for (let i = nextVertexIndex; i < verticesLength - 1; i++) {
     const { priority: currentPriority, path: currentPath } = combinedVerteces[
       i
     ];
     const { priority: nextPriority, path: nextPath } = combinedVerteces[i + 1];
-
     const lastChildIndex = instructions.length - 1;
-
     const nextDirection = getRotateDirection(currentPath, nextPath, rowLength);
+
+    if (currentDirection === nextDirection) {
+      const directionGroup = getDirectionGroup(currentPath, nextPath);
+      directions[currentPath] = directionGroup;
+    } else {
+      directions[currentPath] = {
+        from: reverseDirection(currentDirection),
+        to: nextDirection
+      };
+    }
 
     if (currentPriority === 0 && nextPriority === 0) {
       instructions[lastChildIndex] += 1;
@@ -163,6 +197,13 @@ export const getInstruction = (combinedVerteces, human, rowLength) => {
 
     currentDirection = nextDirection;
   }
+  const lastVertexPath = combinedVerteces[verticesLength - 1].path;
+  const lastDiretiction = getDirectionGroup(
+    lastVertexPath,
+    combinedVerteces[verticesLength - 2].path
+  );
+
+  directions[lastVertexPath] = lastDiretiction;
   instructions[instructions.length - 1] += 1;
-  return instructions;
+  return { instructions, directions };
 };

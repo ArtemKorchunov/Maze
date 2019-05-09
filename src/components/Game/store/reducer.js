@@ -22,6 +22,7 @@ export const initialState = {
   shortestExitPath: null,
   shortestPathStep: 0,
   instructions: [],
+  directions: [],
   step: 0
 };
 
@@ -121,20 +122,19 @@ export const reducer = (state, action) => {
         ],
         []
       );
-      const instructions = getInstruction(
+      const { instructions, directions } = getInstruction(
         combinedVerteces,
         { path: human.position, direction: human.name.name },
         rowLength
       );
-      console.log(instructions);
-      console.log(combinedVerteces);
-      return R.mergeDeepRight(state, {
+      return R.mergeDeepRight(initialState, {
         colLength,
         rowLength,
         maze,
         human,
         shortestExitPath,
         instructions,
+        directions,
         step: 0
       });
     }
