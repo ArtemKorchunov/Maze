@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { Group, Image } from "react-konva";
 import useImage from "use-image";
+import PropTypes from "prop-types";
 
 import { rotatePoint, getCoordsOriginWithOffset } from "./utils";
 import Square from "./Square";
@@ -14,8 +15,8 @@ const Human = ({
   stroke,
   strokeWidth,
   line,
-  imageUrl = "/human.svg",
-  imageSpace = 0.7
+  imageUrl,
+  imageSpace
 }) => {
   const [image] = useImage(imageUrl);
   const imageEl = useRef(null);
@@ -61,6 +62,23 @@ const Human = ({
       />
     </Group>
   );
+};
+
+Human.propTypes = {
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+  size: PropTypes.number.isRequired,
+  bgColor: PropTypes.string.isRequired,
+  stroke: PropTypes.string.isRequired,
+  strokeWidth: PropTypes.number.isRequired,
+  line: PropTypes.oneOfType([PropTypes.object, PropTypes.node]).isRequired,
+  imageUrl: PropTypes.string,
+  imageSpace: PropTypes.number
+};
+
+Human.defaultProps = {
+  imageUrl: "/human.svg",
+  imageSpace: 0.7
 };
 
 export default Human;

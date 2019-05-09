@@ -1,9 +1,9 @@
 import React from "react";
 import styled from "styled-components";
-
+import PropTypes from "prop-types";
 //TODO: make proptypes
 
-const Controller = ({ icon, text, onClick, active = false }) => {
+const Controller = ({ icon, text, onClick, active }) => {
   return (
     <Controller.Wrap onClick={onClick} active={active}>
       {icon}
@@ -30,4 +30,16 @@ Controller.Wrap = styled.div`
 Controller.Text = styled.h4`
   font-size: 1.1rem;
 `;
+
+Controller.propTypes = {
+  icon: PropTypes.node.isRequired,
+  text: PropTypes.string.isRequired,
+  onClick: PropTypes.func,
+  active: PropTypes.bool
+};
+
+Controller.defaultProps = {
+  active: false
+};
+
 export default Controller;

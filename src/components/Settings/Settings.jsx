@@ -62,6 +62,7 @@ Settings.Modal = styled(Modal)`
 Settings.propTypes = {
   modalToggler: PropTypes.func.isRequired,
   modalVisible: PropTypes.bool.isRequired,
+  textareaValue: PropTypes.string.isRequired,
   setTextareaValue: PropTypes.func.isRequired
 };
 

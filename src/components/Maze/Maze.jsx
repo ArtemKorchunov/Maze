@@ -36,7 +36,10 @@ const Maze = ({
 Maze.propTypes = {
   rowLength: PropTypes.number.isRequired,
   colLength: PropTypes.number.isRequired,
-  rectSize: PropTypes.number.isRequired
+  rectSize: PropTypes.number.isRequired,
+  rectColors: PropTypes.object.isRequired,
+  maze: PropTypes.array.isRequired,
+  directions: PropTypes.object.isRequired
 };
 
 export default Maze;

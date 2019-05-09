@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 import { MAZE_SHAPES } from "../Game/constants";
 import { Square, Human, Line } from "./Shapes";
@@ -45,4 +46,18 @@ const Shape = ({
   );
 };
 
+Shape.propTypes = {
+  node: PropTypes.string.isRequired,
+  x: PropTypes.number.isRequired,
+  y: PropTypes.number.isRequired,
+  size: PropTypes.number.isRequired,
+  colors: PropTypes.object.isRequired,
+  stroke: PropTypes.string.isRequired,
+  strokeWidth: PropTypes.number.isRequired,
+  direction: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
+};
+
+Shape.defaultProps = {
+  direction: null
+};
 export default Shape;
