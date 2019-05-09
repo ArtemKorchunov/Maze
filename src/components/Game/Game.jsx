@@ -87,7 +87,7 @@ const Game = () => {
           />
         }
       />
-      <TextSandbox isVisible={textBoxVisible} />
+      <TextSandbox isVisible={textBoxVisible}>Congratulations!</TextSandbox>
     </>
   );
 };

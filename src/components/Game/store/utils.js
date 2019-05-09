@@ -100,6 +100,7 @@ export const getFirstVertexInstruction = (
   humanDirection,
   nextDirection
 ) => {
+  /* Skip all steps forward */
   let secondVertexIndex = combinedVerteces
     .slice(1)
     .findIndex(vertex => vertex.priority !== 0);
@@ -110,6 +111,10 @@ export const getFirstVertexInstruction = (
   const secondVertex = combinedVerteces[1];
 
   const currentPriority = currentVertex.priority[secondVertex.path];
+
+  /* 3 priority means turn opposit side + 1 step forward */
+  /* 2 priority means turning to 90 deg + 1 step forward */
+  /* 1 priority means turn 1 step forward */
 
   if (currentPriority === 3) {
     return [turnLeft, turnLeft, secondVertexIndex];
@@ -122,7 +127,7 @@ export const getFirstVertexInstruction = (
   }
 };
 
-const reverseDirection = direction => {
+const oppositeDirection = direction => {
   switch (direction) {
     case TOP:
       return BOTTOM;
@@ -144,11 +149,14 @@ export const getInstruction = (combinedVerteces, human, rowLength) => {
     rowLength
   );
 
+  /* Get first instruction separately because of specific weight value */
   let instructions = getFirstVertexInstruction(
     combinedVerteces,
     human.direction,
     currentDirection
   );
+
+  /* Group -> Horizontal or vertical */
   const directionGroup = getDirectionGroup(
     combinedVerteces[0].path,
     combinedVerteces[1].path
@@ -156,12 +164,14 @@ export const getInstruction = (combinedVerteces, human, rowLength) => {
 
   const nextVertexIndex = instructions[instructions.length - 1];
 
+  /* Is the line path that is drawn in canvas */
   let directions = {};
-
   for (let i = 0; i < nextVertexIndex; i++) {
     directions[combinedVerteces[i].path] = directionGroup;
   }
+
   const verticesLength = combinedVerteces.length;
+
   for (let i = nextVertexIndex; i < verticesLength - 1; i++) {
     const { priority: currentPriority, path: currentPath } = combinedVerteces[
       i
@@ -170,16 +180,18 @@ export const getInstruction = (combinedVerteces, human, rowLength) => {
     const lastChildIndex = instructions.length - 1;
     const nextDirection = getRotateDirection(currentPath, nextPath, rowLength);
 
+    /* Only for getting directions */
     if (currentDirection === nextDirection) {
       const directionGroup = getDirectionGroup(currentPath, nextPath);
       directions[currentPath] = directionGroup;
     } else {
       directions[currentPath] = {
-        from: reverseDirection(currentDirection),
+        from: oppositeDirection(currentDirection),
         to: nextDirection
       };
     }
 
+    /* 0 priority means step forward */
     if (currentPriority === 0 && nextPriority === 0) {
       instructions[lastChildIndex] += 1;
       continue;
@@ -187,6 +199,7 @@ export const getInstruction = (combinedVerteces, human, rowLength) => {
 
     if (i !== nextVertexIndex) instructions[lastChildIndex] += 1;
 
+    /* 2 priority means turning to 90 deg + 1 step forward */
     if (
       (currentPriority === 0 && nextPriority === 2) ||
       (currentPriority === 2 && nextPriority === 2)
@@ -197,6 +210,8 @@ export const getInstruction = (combinedVerteces, human, rowLength) => {
 
     currentDirection = nextDirection;
   }
+
+  /* Adding exit direction */
   const lastVertexPath = combinedVerteces[verticesLength - 1].path;
   const lastDiretiction = getDirectionGroup(
     lastVertexPath,
@@ -205,5 +220,6 @@ export const getInstruction = (combinedVerteces, human, rowLength) => {
 
   directions[lastVertexPath] = lastDiretiction;
   instructions[instructions.length - 1] += 1;
+
   return { instructions, directions };
 };

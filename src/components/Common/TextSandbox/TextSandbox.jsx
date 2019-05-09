@@ -2,6 +2,7 @@ import React from "react";
 import posed, { PoseGroup } from "react-pose";
 import SplitText from "react-pose-text";
 import styled from "styled-components";
+import PropTypes from "prop-types";
 
 import "./styles.css";
 
@@ -31,7 +32,7 @@ const charPoses = {
   }
 };
 
-function TextSandbox({ text = "Congratulations !", isVisible }) {
+function TextSandbox({ children, isVisible }) {
   return (
     <PoseGroup>
       {isVisible && (
@@ -41,7 +42,7 @@ function TextSandbox({ text = "Congratulations !", isVisible }) {
             pose="enter"
             charPoses={charPoses}
           >
-            {text}
+            {children}
           </TextSandbox.SplitText>
         </Modal>
       )}
@@ -68,4 +69,7 @@ TextSandbox.SplitText = styled(SplitText)`
   text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
 `;
 
+TextSandbox.propTypes = {
+  isVisible: PropTypes.bool.isRequired
+};
 export default TextSandbox;

@@ -34,13 +34,14 @@ export const reducer = (state, action) => {
     case SET_MAZE: {
       const splitedArr = splitByNewLine(action.payload);
 
+      /* Validate if payload has banned symbols */
       const validate = action.payload.match(mazeValidateRule);
-
       if (!validate) {
         toast.error("You could use only this symbols '#','|>|<|v|^', ' ' !");
         return state;
       }
 
+      /* Get row and column length of maze */
       const colLength = splitedArr.length;
       const maze = R.compose(
         R.split(""),
@@ -48,6 +49,7 @@ export const reducer = (state, action) => {
       )(splitedArr);
       const rowLength = maze.length / colLength;
 
+      /* Validation */
       if (R.not(isInteger(rowLength))) {
         toast.error("Maze should be rectangle!");
         return state;
@@ -62,24 +64,31 @@ export const reducer = (state, action) => {
 
       let exitNodes = [];
       let human = R.clone(state.human);
+
+      /* Connected human verteces { path: weight } */
       let humanKeysByDirection = {};
 
       for (let index = 0; index < maze.length; index++) {
         const vertex = maze[index];
+
+        /* Get human info if it is situated in this vertex */
         const isHuman = getDirectionMeta(vertex);
 
         let connectedVertices = {};
 
         if (vertex === SPACE || isHuman) {
+          /* Iterate by four connected verteces [top, right, left, bottom] */
           for (const directionKey of Object.keys(vertexDirections)) {
             const direction = vertexDirections[directionKey];
 
             const vertexIndex = direction.getConnectedIndex(index, rowLength);
+            /* Returns true if connected vertex is not tree */
             const hasDirection = direction.hasDirection(
               vertexIndex,
               rowLength,
               colLength
             );
+
             if (maze[vertexIndex] === TREE && hasDirection) continue;
             //Check if it is not a border element
             if (hasDirection) {
@@ -103,6 +112,10 @@ export const reducer = (state, action) => {
           human.position = index;
         }
       }
+      /*
+        Set connected to human position weights,
+        depending on the distance of rotation to connected vertex
+      */
       for (const key of Object.keys(DIRECTION)) {
         const { name, index } = DIRECTION[key];
 
@@ -116,6 +129,7 @@ export const reducer = (state, action) => {
         graph.vertices[humanPosition][connectedVertexIndex] = currentWeight;
       }
 
+      /* Validate */
       if (!exitNodes.length) {
         toast.error("No exits found!");
         return initialState;
@@ -130,12 +144,15 @@ export const reducer = (state, action) => {
           .shortestPath(human.position.toString(), exitNode)
           .concat([human.position.toString()])
           .reverse();
+
+        /* Checkout by summary of all rotating weights */
         if (graph.prioritieSum < lowestWeight) {
           lowestWeight = graph.alt;
           shortestExitPath = currentExitPath;
           lowestPriorities = R.clone(graph.priorities);
         }
       }
+
       const combinedVerteces = shortestExitPath.reduce(
         (prevValue, path) => [
           ...prevValue,
@@ -144,17 +161,18 @@ export const reducer = (state, action) => {
         []
       );
 
+      /* Validate, if there is no exit */
       const hasNoPath = R.not(
         exitNodes.find(
           exitNode => exitNode === shortestExitPath[shortestExitPath.length - 1]
         )
       );
-
       if (hasNoPath) {
         toast.error("No exits found!");
         return initialState;
       }
 
+      /* Get all steps and directions to the exit node */
       const { instructions, directions } = getInstruction(
         combinedVerteces,
         { path: human.position, direction: human.name.name },
@@ -186,9 +204,12 @@ export const reducer = (state, action) => {
       );
 
       let changedState = {};
+
+      /* human.name is the direction object with the name property -> top | left ... */
       if (nextDirection === human.name.name) {
         const nextShortestPathStep = action.payload + state.shortestPathStep;
 
+        /* Change human position in maze */
         nextMaze[currentNode] = MAZE_SHAPES.SPACE;
         nextMaze[shortestExitPath[nextShortestPathStep]] = human.shape;
 
