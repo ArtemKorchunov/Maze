@@ -32,6 +32,7 @@ GameView.Wrapper = styled.div`
 
 GameView.Content = styled.div`
   display: flex;
+  padding-bottom: 2rem;
 `;
 
 GameView.Maze = styled.div`

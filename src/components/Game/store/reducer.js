@@ -1,6 +1,7 @@
 import * as R from "ramda";
+import { toast } from "react-toastify";
 
-import { SET_MAZE, MAKE_STEP } from "./constants";
+import { SET_MAZE, MAKE_STEP, mazeValidateRule } from "./constants";
 import { MAZE_SHAPES, DIRECTION } from "../constants";
 import { splitByNewLine, Graph, isInteger } from "../../utils";
 import { getDirectionMeta } from "../utils";
@@ -19,7 +20,7 @@ export const initialState = {
     shape: "",
     position: 0
   },
-  shortestExitPath: null,
+  shortestExitPath: [],
   shortestPathStep: 0,
   instructions: [],
   directions: [],
@@ -33,6 +34,13 @@ export const reducer = (state, action) => {
     case SET_MAZE: {
       const splitedArr = splitByNewLine(action.payload);
 
+      const validate = action.payload.match(mazeValidateRule);
+
+      if (!validate) {
+        toast.error("You could use only this symbols '#','|>|<|v|^', ' ' !");
+        return state;
+      }
+
       const colLength = splitedArr.length;
       const maze = R.compose(
         R.split(""),
@@ -40,7 +48,10 @@ export const reducer = (state, action) => {
       )(splitedArr);
       const rowLength = maze.length / colLength;
 
-      if (R.not(isInteger(rowLength))) return state;
+      if (R.not(isInteger(rowLength))) {
+        toast.error("Maze should be rectangle!");
+        return state;
+      }
 
       const graph = new Graph();
 
@@ -100,7 +111,12 @@ export const reducer = (state, action) => {
         graph.vertices[humanPosition][connectedVertexIndex] = currentWeight;
       }
 
-      let shortestExitPath;
+      if (!exitNodes.length) {
+        toast.error("No exits found!");
+        return initialState;
+      }
+
+      let shortestExitPath = [];
       let lowestWeight = Infinity;
       let lowestPriorities = null;
 
@@ -161,7 +177,11 @@ export const reducer = (state, action) => {
 
         changedState = {
           shortestPathStep: nextShortestPathStep,
-          maze: nextMaze
+          maze: nextMaze,
+          human: {
+            ...human,
+            position: shortestExitPath[nextShortestPathStep]
+          }
         };
       } else {
         const nextRotationDeg = getRotationDeg(human.rotation, action.payload);

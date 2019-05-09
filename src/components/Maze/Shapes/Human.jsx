@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import { Group, Image } from "react-konva";
 import useImage from "use-image";
 
@@ -36,9 +36,9 @@ const Human = ({
 
   const sizeBySpace = size * imageSpace;
 
-  if (imageEl.current) {
+  useEffect(() => {
     imageEl.current.rotate(rotation);
-  }
+  }, [rotation]);
 
   return (
     <Group>
@@ -63,4 +63,4 @@ const Human = ({
   );
 };
 
-export default React.memo(Human);
+export default Human;

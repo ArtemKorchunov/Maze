@@ -1,0 +1,15 @@
+.modal {
+  background: white;
+  border-radius: 10px;
+  position: fixed;
+  top: calc(50vh - 85px);
+  width: 100%;
+  max-width: 500px;
+  left: calc(50% - 290px);
+  background-image: radial-gradient(
+    120% 600px at 50% 200px,
+    #1c99ff,
+    #7006be 120%
+  );
+  padding: 3rem;
+}

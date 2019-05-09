@@ -1,4 +1,4 @@
-import React, { useReducer, useState } from "react";
+import React, { useReducer, useState, useEffect } from "react";
 import * as R from "ramda";
 
 import GameView from "./Game.view";
@@ -9,22 +9,28 @@ import Controllers from "../Controllers";
 import Settings from "../Settings";
 //Constants
 import { rectSize, MAZE_COLORS } from "./constants";
-//Utils
-import { debounce } from "../utils";
 
-import { reducer, initialState, SET_MAZE, MAKE_STEP } from "./store";
+import { reducer, initialState, setMaze, MAKE_STEP } from "./store";
+
+import TextSandbox from "../Common/TextSandbox";
 
 const Game = () => {
   // Maze reducer
   const [
-    { maze, rowLength, colLength, step, instructions, directions },
+    {
+      maze,
+      rowLength,
+      colLength,
+      step,
+      instructions,
+      directions,
+      human,
+      shortestExitPath
+    },
     dispatch
   ] = useReducer(reducer, initialState);
 
   // Actions
-  const setMaze = debounce(value => {
-    dispatch({ type: SET_MAZE, payload: value });
-  }, 1000);
   const makeStep = value => {
     dispatch({ type: MAKE_STEP, payload: value });
   };
@@ -34,39 +40,55 @@ const Game = () => {
   const setTextareaCb = e => {
     const value = R.path(["target", "value"], e);
     setTextareaValue(value);
-    setMaze(value);
+    setMaze(value, dispatch);
   };
 
   //Modal toggler
   const [modalVisible, setModalVisible] = useState(false);
 
+  const [textBoxVisible, setTextBoxVisible] = useState(false);
+
+  useEffect(() => {
+    if (human.position === shortestExitPath[shortestExitPath.length - 1]) {
+      setTextBoxVisible(true);
+      setTimeout(() => {
+        setTextBoxVisible(false);
+      }, 2000);
+    }
+  }, [human.position, shortestExitPath, step]);
+
   return (
-    <GameView
-      headline="Shortest maze navigator"
-      maze={
-        R.isEmpty(maze) ? (
-          "You need to set Maze firstly !"
-        ) : (
-          <Maze
-            maze={maze}
-            directions={directions}
-            colLength={colLength}
-            rowLength={rowLength}
-            rectColors={MAZE_COLORS}
-            rectSize={rectSize}
+    <>
+      <GameView
+        headline="Shortest maze navigator"
+        maze={
+          R.isEmpty(maze) ? (
+            "You need to set Maze firstly !"
+          ) : (
+            <Maze
+              maze={maze}
+              directions={directions}
+              colLength={colLength}
+              rowLength={rowLength}
+              rectColors={MAZE_COLORS}
+              rectSize={rectSize}
+            />
+          )
+        }
+        controllers={
+          <Controllers step={instructions[step]} action={makeStep} />
+        }
+        settings={
+          <Settings
+            modalVisible={modalVisible}
+            modalToggler={() => setModalVisible(R.not(modalVisible))}
+            textareaValue={textareaValue}
+            setTextareaValue={setTextareaCb}
           />
-        )
-      }
-      controllers={<Controllers step={instructions[step]} action={makeStep} />}
-      settings={
-        <Settings
-          modalVisible={modalVisible}
-          modalToggler={() => setModalVisible(R.not(modalVisible))}
-          textareaValue={textareaValue}
-          setTextareaValue={setTextareaCb}
-        />
-      }
-    />
+        }
+      />
+      <TextSandbox isVisible={textBoxVisible} />
+    </>
   );
 };
 
