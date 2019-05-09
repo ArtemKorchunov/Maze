@@ -130,6 +130,7 @@ export const reducer = (state, action) => {
           .shortestPath(human.position.toString(), exitNode)
           .concat([human.position.toString()])
           .reverse();
+        debugger;
         if (graph.prioritieSum < lowestWeight) {
           lowestWeight = graph.alt;
           shortestExitPath = currentExitPath;

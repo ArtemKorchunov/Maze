@@ -51,6 +51,7 @@ export function Graph(mazeLength) {
         [start]: { ...this.vertices[start] },
         [finish]: 0
       };
+      this.prioritieSum = this.vertices[start][finish];
       return [finish];
     }
 
