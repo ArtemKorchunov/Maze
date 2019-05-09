@@ -53,6 +53,11 @@ export const reducer = (state, action) => {
         return state;
       }
 
+      if (maze.length < 9) {
+        toast.error("Maze length is less than 9 symbols!");
+        return state;
+      }
+
       const graph = new Graph();
 
       let exitNodes = [];
@@ -125,7 +130,7 @@ export const reducer = (state, action) => {
           .shortestPath(human.position.toString(), exitNode)
           .concat([human.position.toString()])
           .reverse();
-        if (graph.alt < lowestWeight) {
+        if (graph.prioritieSum < lowestWeight) {
           lowestWeight = graph.alt;
           shortestExitPath = currentExitPath;
           lowestPriorities = R.clone(graph.priorities);
@@ -138,6 +143,18 @@ export const reducer = (state, action) => {
         ],
         []
       );
+
+      const hasNoPath = R.not(
+        exitNodes.find(
+          exitNode => exitNode === shortestExitPath[shortestExitPath.length - 1]
+        )
+      );
+
+      if (hasNoPath) {
+        toast.error("No exits found!");
+        return initialState;
+      }
+
       const { instructions, directions } = getInstruction(
         combinedVerteces,
         { path: human.position, direction: human.name.name },

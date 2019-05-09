@@ -43,6 +43,7 @@ export function Graph(mazeLength) {
       previousDirectionGroup = {};
     this.priorities[start] = {};
     this.alt = null;
+    this.prioritieSum = 0;
 
     if (this.vertices[start][finish]) {
       this.alt = this.vertices[start][finish];
@@ -72,6 +73,11 @@ export function Graph(mazeLength) {
         path = [];
 
         while (previous[smallest]) {
+          if (previous[smallest] === start) {
+            this.prioritieSum += this.priorities[start][smallest];
+          } else {
+            this.prioritieSum += this.priorities[smallest];
+          }
           path.push(smallest);
           smallest = previous[smallest];
         }
