@@ -92,6 +92,7 @@ export const reducer = (state, action) => {
             if (maze[vertexIndex] === TREE && hasDirection) continue;
             //Check if it is not a border element
             if (hasDirection) {
+              /* Set weight 0 as it is a step up in the same direction as previous */
               connectedVertices = R.assoc(
                 vertexIndex.toString(),
                 0,
@@ -132,7 +133,7 @@ export const reducer = (state, action) => {
       /* Validate */
       if (!exitNodes.length) {
         toast.error("No exits found!");
-        return initialState;
+        return state;
       }
 
       let shortestExitPath = [];
@@ -169,7 +170,7 @@ export const reducer = (state, action) => {
       );
       if (hasNoPath) {
         toast.error("No exits found!");
-        return initialState;
+        return state;
       }
 
       /* Get all steps and directions to the exit node */
@@ -193,10 +194,13 @@ export const reducer = (state, action) => {
       });
     }
     case MAKE_STEP: {
+      /* Is index of current step of shortestExitPath array */
       const shortestPathStep = state.shortestPathStep;
       const shortestExitPath = state.shortestExitPath;
+
       const currentNode = Number(shortestExitPath[shortestPathStep]);
       const nextNode = Number(shortestExitPath[shortestPathStep + 1]);
+
       const human = state.human;
       const nextMaze = state.maze;
 
@@ -225,11 +229,15 @@ export const reducer = (state, action) => {
           }
         };
       } else {
+        /* Get next deg */
         const nextRotationDeg = getRotationDeg(human.rotation, action.payload);
 
+        /* Get direction meta like shape, rotation ... */
         const directionMeta = MAZE_SHAPES.HUMAN_DIRECTION.find(
           direction => direction.rotation === nextRotationDeg
         );
+
+        /* Change rotation in maze */
         nextMaze[currentNode] = directionMeta.shape;
         changedState = {
           maze: nextMaze,

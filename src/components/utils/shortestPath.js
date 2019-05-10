@@ -24,7 +24,7 @@ function PriorityQueue() {
  */
 
 export function Graph(mazeLength) {
-  var INFINITY = 1 / 0;
+  const INFINITY = Infinity;
   this.mazeLength = mazeLength;
   this.priorities = {};
   this.vertices = {};
@@ -41,10 +41,12 @@ export function Graph(mazeLength) {
       vertex,
       neighbor,
       previousDirectionGroup = {};
+
     this.priorities[start] = {};
     this.alt = null;
     this.prioritieSum = 0;
 
+    /* Checking if start and finish is connected */
     if (this.vertices[start][finish]) {
       this.alt = this.vertices[start][finish];
       this.priorities = {
@@ -73,6 +75,8 @@ export function Graph(mazeLength) {
       if (smallest === finish) {
         path = [];
 
+        /* Custom logic */
+        /* Add prioritySum -> sum of all rotations weights */
         while (previous[smallest]) {
           if (previous[smallest] === start) {
             this.prioritieSum += this.priorities[start][smallest];
@@ -95,10 +99,16 @@ export function Graph(mazeLength) {
 
         const smallestNum = Number(smallest);
         const neighborNum = Number(neighbor);
+
+        /* Direction group -> Horizontal, Vertical */
         previousDirectionGroup[smallest][neighbor] = getDirectionGroup(
           smallestNum,
           neighborNum
         );
+        /* 
+          If direction changed, than human needs to rotate -
+          weight of rotation 2, weight of going forward 0
+        */
         if (smallest !== start && neighbor !== start) {
           const currentDirectionGroup = getDirectionGroup(
             smallestNum,
