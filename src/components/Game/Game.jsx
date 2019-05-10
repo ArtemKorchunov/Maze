@@ -2,8 +2,6 @@ import React, { useReducer, useState, useEffect } from "react";
 import * as R from "ramda";
 
 import GameView from "./Game.view";
-//TODO: Move all dependent components as nested to Game component
-//TODO: Move default text when maze is not set to separate component
 import Maze from "./Maze";
 import MazePlaceholder from "./MazePlaceholder";
 import Controllers from "./Controllers";
