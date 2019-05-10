@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
-//TODO: make proptypes
 
 const Controller = ({ icon, text, onClick, active }) => {
   return (

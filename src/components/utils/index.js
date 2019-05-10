@@ -14,7 +14,12 @@ export const debounce = (f, ms) => {
     timer = setTimeout(onComplete, ms);
   };
 };
-
-export const splitByNewLine = str => str.split(/[\n\r|↵]/g);
+export const replaceAt = (string, index, replacement) => {
+  return (
+    string.substr(0, index) +
+    replacement +
+    string.substr(index + replacement.length)
+  );
+};
 export const isInteger = num => (num ^ 0) === num;
 export { Graph } from "./shortestPath";

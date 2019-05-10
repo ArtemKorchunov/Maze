@@ -223,3 +223,7 @@ export const getInstruction = (combinedVerteces, human, rowLength) => {
 
   return { instructions, directions };
 };
+
+export const getMatrixCoords = (cordNode, rowLength) => {
+  return { row: cordNode % rowLength, col: Math.floor(cordNode / rowLength) };
+};

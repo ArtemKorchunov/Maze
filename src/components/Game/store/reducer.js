@@ -1,18 +1,25 @@
 import * as R from "ramda";
 import { toast } from "react-toastify";
 
-import { SET_MAZE, MAKE_STEP, mazeValidateRule } from "./constants";
+import {
+  SET_MAZE,
+  MAKE_STEP,
+  SET_TEXTAREA,
+  mazeValidateRule
+} from "./constants";
 import { MAZE_SHAPES, DIRECTION } from "../constants";
-import { splitByNewLine, Graph, isInteger } from "../../utils";
+import { Graph, isInteger, replaceAt } from "../../utils";
 import { getDirectionMeta } from "../utils";
 import {
   vertexDirections,
   getInstruction,
   getRotateDirection,
-  getRotationDeg
+  getRotationDeg,
+  getMatrixCoords
 } from "./utils";
 
 export const initialState = {
+  textareaValue: "",
   rowLength: 0,
   colLength: 0,
   maze: [],
@@ -32,7 +39,7 @@ const { TREE, SPACE } = MAZE_SHAPES;
 export const reducer = (state, action) => {
   switch (action.type) {
     case SET_MAZE: {
-      const splitedArr = splitByNewLine(action.payload);
+      const splitedArr = action.payload.split("\n");
 
       /* Validate if payload has banned symbols */
       const validate = action.payload.match(mazeValidateRule);
@@ -183,6 +190,7 @@ export const reducer = (state, action) => {
       toast.success("Your maze is drawn!");
 
       return R.mergeDeepRight(initialState, {
+        textareaValue: state.textareaValue,
         colLength,
         rowLength,
         maze,
@@ -198,6 +206,8 @@ export const reducer = (state, action) => {
       const shortestPathStep = state.shortestPathStep;
       const shortestExitPath = state.shortestExitPath;
 
+      const rowLength = state.rowLength;
+
       const currentNode = Number(shortestExitPath[shortestPathStep]);
       const nextNode = Number(shortestExitPath[shortestPathStep + 1]);
 
@@ -212,6 +222,10 @@ export const reducer = (state, action) => {
 
       let changedState = {};
 
+      /* Set textarea value */
+      let splittedTextarea = state.textareaValue.split("\n");
+      const { col, row } = getMatrixCoords(currentNode, rowLength);
+
       /* human.name is the direction object with the name property -> top | left ... */
       if (nextDirection === human.name.name) {
         const nextShortestPathStep = action.payload + state.shortestPathStep;
@@ -220,9 +234,25 @@ export const reducer = (state, action) => {
         nextMaze[currentNode] = MAZE_SHAPES.SPACE;
         nextMaze[shortestExitPath[nextShortestPathStep]] = human.shape;
 
+        /* Set textarea value */
+        splittedTextarea[col] = replaceAt(
+          splittedTextarea[col],
+          row,
+          MAZE_SHAPES.SPACE
+        );
+        const { col: nextCol, row: nextRow } = getMatrixCoords(
+          shortestExitPath[nextShortestPathStep],
+          rowLength
+        );
+        splittedTextarea[nextCol] = replaceAt(
+          splittedTextarea[nextCol],
+          nextRow,
+          human.shape
+        );
+
         changedState = {
           shortestPathStep: nextShortestPathStep,
-          maze: nextMaze,
+          maze: [...nextMaze],
           human: {
             ...human,
             position: shortestExitPath[nextShortestPathStep]
@@ -239,6 +269,14 @@ export const reducer = (state, action) => {
 
         /* Change rotation in maze */
         nextMaze[currentNode] = directionMeta.shape;
+
+        /* Set textarea value */
+        splittedTextarea[col] = replaceAt(
+          splittedTextarea[col],
+          row,
+          directionMeta.shape
+        );
+
         changedState = {
           maze: nextMaze,
           human: {
@@ -247,8 +285,14 @@ export const reducer = (state, action) => {
           }
         };
       }
-
-      return R.mergeDeepRight(state, { ...changedState, step: state.step + 1 });
+      return R.mergeDeepRight(state, {
+        ...changedState,
+        step: state.step + 1,
+        textareaValue: splittedTextarea.join("\n")
+      });
+    }
+    case SET_TEXTAREA: {
+      return R.mergeDeepRight(state, { textareaValue: action.payload });
     }
 
     default: {

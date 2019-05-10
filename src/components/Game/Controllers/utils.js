@@ -1,4 +1,4 @@
-import { INSTRUCTION } from "../Game/constants";
+import { INSTRUCTION } from "../constants";
 
 export const getCurrentInfo = step => {
   if (step === INSTRUCTION.TURN_LEFT) {

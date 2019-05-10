@@ -4,14 +4,20 @@ import * as R from "ramda";
 import GameView from "./Game.view";
 //TODO: Move all dependent components as nested to Game component
 //TODO: Move default text when maze is not set to separate component
-import Maze from "../Maze";
-import Controllers from "../Controllers";
-import Settings from "../Settings";
+import Maze from "./Maze";
+import Controllers from "./Controllers";
+import Settings from "./Settings";
 import { usePrevious } from "../Common/hooks";
 //Constants
 import { rectSize, MAZE_COLORS } from "./constants";
 
-import { reducer, initialState, setMaze, MAKE_STEP } from "./store";
+import {
+  reducer,
+  initialState,
+  setMaze,
+  MAKE_STEP,
+  SET_TEXTAREA
+} from "./store";
 
 import TextSandbox from "../Common/TextSandbox";
 
@@ -26,7 +32,8 @@ const Game = () => {
       instructions,
       directions,
       human,
-      shortestExitPath
+      shortestExitPath,
+      textareaValue
     },
     dispatch
   ] = useReducer(reducer, initialState);
@@ -35,9 +42,10 @@ const Game = () => {
   const makeStep = value => {
     dispatch({ type: MAKE_STEP, payload: value });
   };
-
+  const setTextareaValue = value => {
+    dispatch({ type: SET_TEXTAREA, payload: value });
+  };
   //Textarea state
-  const [textareaValue, setTextareaValue] = useState("");
   const setTextareaCb = e => {
     const value = R.path(["target", "value"], e);
     setTextareaValue(value);

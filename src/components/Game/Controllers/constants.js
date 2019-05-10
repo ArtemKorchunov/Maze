@@ -1,5 +1,5 @@
-import { LeftArrow, RightArrow, UpArrow } from "../Common/Styled";
-import { INSTRUCTION } from "../Game/constants";
+import { LeftArrow, RightArrow, UpArrow } from "../../Common/Styled";
+import { INSTRUCTION } from "../constants";
 
 export const controllers = [
   {

@@ -2,7 +2,7 @@ import React from "react";
 import { Line } from "react-konva";
 import PropTypes from "prop-types";
 
-import { yellowColor } from "../../../../constants";
+import { yellowColor } from "../../../../../constants";
 import { getDirectionPoints } from "./utils";
 
 const LineShape = ({ x, y, size, direction }) => {

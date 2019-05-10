@@ -1,4 +1,4 @@
-import { DIRECTION, HORIZONTAL, VERTICAL } from "../../../Game/constants";
+import { DIRECTION, HORIZONTAL, VERTICAL } from "../../../constants";
 
 const {
   TOP: { name: TOP },

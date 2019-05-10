@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { TextareaStyled } from "../Common/Styled";
+import { TextareaStyled } from "../../Common/Styled";
 
 const SettingsContent = ({ value, setValue }) => {
   return (

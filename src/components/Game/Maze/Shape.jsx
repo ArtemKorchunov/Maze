@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-import { MAZE_SHAPES } from "../Game/constants";
+import { MAZE_SHAPES } from "../constants";
 import { Square, Human, Line } from "./Shapes";
 
-import { getDirectionMeta } from "../Game/utils";
+import { getDirectionMeta } from "../utils";
 
 const { TREE, SPACE } = MAZE_SHAPES;
 

@@ -3,7 +3,7 @@ import Modal from "react-modal";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
-import { SettingsIcon, rotate360 } from "../Common/Styled";
+import { SettingsIcon, rotate360 } from "../../Common/Styled";
 
 import SettingsContent from "./SettingsContent";
 
@@ -66,4 +66,4 @@ Settings.propTypes = {
   setTextareaValue: PropTypes.func.isRequired
 };
 
-export default Settings;
+export default React.memo(Settings);
