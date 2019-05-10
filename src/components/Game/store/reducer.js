@@ -159,10 +159,12 @@ export const reducer = (state, action) => {
           .shortestPath(human.position.toString(), exitNode)
           .concat([human.position.toString()])
           .reverse();
-
         /* Checkout by summary of all rotating weights */
-        if (graph.prioritieSum < lowestWeight) {
-          lowestWeight = graph.alt;
+        if (
+          graph.prioritieSum < lowestWeight &&
+          currentExitPath[currentExitPath.length - 1] === exitNode
+        ) {
+          lowestWeight = graph.prioritieSum;
           shortestExitPath = currentExitPath;
           lowestPriorities = R.clone(graph.priorities);
         }
