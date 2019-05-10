@@ -7,6 +7,7 @@ import GameView from "./Game.view";
 import Maze from "../Maze";
 import Controllers from "../Controllers";
 import Settings from "../Settings";
+import { usePrevious } from "../Common/hooks";
 //Constants
 import { rectSize, MAZE_COLORS } from "./constants";
 
@@ -48,6 +49,15 @@ const Game = () => {
 
   const [textBoxVisible, setTextBoxVisible] = useState(false);
 
+  /* Check previous maze with current to auto close textarea modal */
+  const prevMaze = usePrevious(maze);
+  useEffect(() => {
+    if (prevMaze !== maze && modalVisible) {
+      setModalVisible(false);
+    }
+  }, [maze, modalVisible, prevMaze]);
+
+  /* If human.position is exit, show congrat popup */
   useEffect(() => {
     if (human.position === shortestExitPath[shortestExitPath.length - 1]) {
       setTextBoxVisible(true);
