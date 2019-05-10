@@ -109,6 +109,13 @@ export const reducer = (state, action) => {
               //if it is border element that is " " it could be an exit
               exitNodes = R.append(index.toString(), exitNodes);
             }
+
+            /* Validate */
+            if (isHuman && R.not(hasDirection)) {
+              toast.error("Human can't be in the corner of maze!");
+              return state;
+            }
+
             if (isHuman) {
               humanKeysByDirection[directionKey] = vertexIndex;
             }
