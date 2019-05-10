@@ -5,6 +5,7 @@ import GameView from "./Game.view";
 //TODO: Move all dependent components as nested to Game component
 //TODO: Move default text when maze is not set to separate component
 import Maze from "./Maze";
+import MazePlaceholder from "./MazePlaceholder";
 import Controllers from "./Controllers";
 import Settings from "./Settings";
 import { usePrevious } from "../Common/hooks";
@@ -81,7 +82,11 @@ const Game = () => {
         headline="Shortest maze navigator"
         maze={
           R.isEmpty(maze) ? (
-            "You need to set Maze firstly !"
+            <MazePlaceholder
+              onClick={() => setModalVisible(R.not(modalVisible))}
+            >
+              You need to set maze firstly!
+            </MazePlaceholder>
           ) : (
             <Maze
               maze={maze}
