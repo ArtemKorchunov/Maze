@@ -44,7 +44,9 @@ export const reducer = (state, action) => {
       /* Validate if payload has banned symbols */
       const validate = action.payload.match(mazeValidateRule);
       if (!validate) {
-        toast.error("You could use only this symbols '#','|>|<|v|^', ' ' !");
+        toast.error(
+          "You could use only '#' ' ' '>' 'v' '^' '<'\n Bare in mind, one of the symbols always need to be arrow !"
+        );
         return state;
       }
 
@@ -196,7 +198,7 @@ export const reducer = (state, action) => {
         rowLength
       );
 
-      toast.success("Your maze is drawn!");
+      toast.success("Your maze has been drawn!");
 
       return R.mergeDeepRight(initialState, {
         textareaValue: state.textareaValue,
