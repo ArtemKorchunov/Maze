@@ -1,68 +1,97 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Навигатор по лабиринту
 
-## Available Scripts
+Бедный пользователь попал в лабиринт, но, к счастью, у него есть карта! Карта задается строкой (формат строки описан ниже). Тебе нужно отобразить эту карту и помочь пользователю найти выход.
 
-In the project directory, you can run:
+Так как пользователь ничего не смыслит в топографии, тебе нужно не просто нарисовать путь, а дать ему пошаговый список указаний, которые ему следует выполнить, чтобы выйти из лабиринта.
 
-### `npm start`
+**Указания могут быть такими:**
+- поверните налево
+- поверните направо
+- развернитесь
+- пройдите N шагов вперед
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Для того, чтобы пользователь не запутался, указания должны быть выведены пошагово, на выполнение одного действия ему требуется 1 секунда. 
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+Также нужно визуализировать карту и маршрут на ней в реальном времени. Простыми словами: тебе нужно показать стрелочку/человечка на карте, который будет двигаться согласно указаниям вместе с пользователем. Если выхода из лабиринта нет, то нужно сообщить об этом. 
 
-### `npm test`
+## UI
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Постарайся сделать максимально простой и понятный интерфейс пользователя.
 
-### `npm run build`
+Вот так может выглядеть приложение:
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+![mockup](https://i.imgur.com/MUl9FAu.png)
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+Делать точно так же не обязательно. Интерфейс пользователя, визуализация лабиринта остается на твое усмотрение. Мы приветствуем инициативу, так что если есть идеи как сделать круто, то смело их реализуй
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Формат карты:
 
-### `npm run eject`
+```
+#########
+#>#   # #
+#   #   #
+####### #
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- `пробел` - это свободное место, где можно передвигаться
+- `#` - это колючий куст, через который нельзя пройти
+- `^`, `<`, `v` или `>` - это начальная позиция пользователя, который повернут вверх, влево, вниз или вправо соответственно 
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Ограничения:
+- карта будет всегда прямоугольной
+- в карте не может быть символов отличных от описанных выше
+- у лабиринта может быть одна или несколько точек выхода, также, выхода может вообще не быть 
+- важно учитывать начальное расположение и поворот тела пользователя и отразить необходимые повороты в указаниях
+- один шаг пользователя -- это одна клеточка карты
+- одно действие (поворот, шаг, разворот) занимает одну секунду
+- пользователь не умеет двигаться по диагонали, только прямо
+- твоя задача, в первую очередь, вывести пользователя из лабиринта, но построение кратчайшего маршрута приветствуется  
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Примеры карт лабиринтов:
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```
+# #
+ > 
+# #
+```
 
-## Learn More
+```
+####### ##
+#>       #
+##########
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```
+##########
+#        #
+#  ##### #
+#  #   # #
+#  #v# # #
+#  ### # #
+#      # #
+######## #
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+```
+#########################################
+#v    #       #     #         # #   #   #
+##### # ##### # ### # # ##### # # # ### #
+# #   #   #   #   #   # #     #   #   # #
+# # # ### # ########### # ####### # # # #
+#   #   # # #       #   # #   #   # #   #
+####### # # # ##### # ### # # # #########
+#   #     # #     # #   #   # # #       #
+# # ####### ### ### ##### ### # ####### #
+# #             #   #     #   #   #   # #
+# ############### ### ##### ##### # # # #
+#               #     #   #   #   # #   #
+##### ####### # ######### # # # ### #####
+#   # #   #   # #         # # # #       #
+# # # # # # ### # # ####### # # ### ### #
+# # #   # # #     #   #     # #     #   #
+# # ##### # # ####### # ##### ####### # #
+# #     # # # #   # # #     # #       # #
+# ##### ### # ### # # ##### # # ### ### #
+#     #     #     #   #     #   #   #    
+#########################################
+```
