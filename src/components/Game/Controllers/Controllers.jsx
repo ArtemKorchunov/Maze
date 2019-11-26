@@ -10,13 +10,14 @@ import { getCurrentInfo } from "./utils";
 const Controllers = ({ step, action }) => {
   const currentInfo = getCurrentInfo(step);
   return (
-    <Controllers.Wrap>
+    <Controllers.Wrap className="controllers">
       {controllers.map(
         ({ instruction: controllerInstruction, Icon, text }, index) => {
           if (controllerInstruction === currentInfo.instruction) {
             return (
               <Controller
                 key={`controller_${index}`}
+                className={controllerInstruction}
                 icon={<Icon />}
                 text={currentInfo.text}
                 onClick={() => action(step)}
@@ -27,6 +28,7 @@ const Controllers = ({ step, action }) => {
             return (
               <Controller
                 key={`controller_${index}`}
+                className={controllerInstruction}
                 icon={<Icon />}
                 text={text}
               />

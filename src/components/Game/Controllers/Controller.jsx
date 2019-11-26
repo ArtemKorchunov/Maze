@@ -2,9 +2,9 @@ import React from "react";
 import styled from "styled-components";
 import PropTypes from "prop-types";
 
-const Controller = ({ icon, text, onClick, active }) => {
+const Controller = ({ icon, text, onClick, active, className }) => {
   return (
-    <Controller.Wrap onClick={onClick} active={active}>
+    <Controller.Wrap onClick={onClick} active={active} className={className}>
       {icon}
       <Controller.Text>{text}</Controller.Text>
     </Controller.Wrap>
