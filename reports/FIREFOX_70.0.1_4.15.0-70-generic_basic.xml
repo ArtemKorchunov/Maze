@@ -1,25 +1,32 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <testsuites errors="0"
             failures="0"
-            tests="3">
+            tests="4">
 
   <testsuite name="basic"
     errors="0" failures="0" hostname="" id="" package="basic" skipped="0"
-    tests="3" time="8.393" timestamp="">
+    tests="4" time="15.94" timestamp="">
   
-    <testcase name="Home Page header is present" classname="basic" time="1.520" assertions="2">
+    <testcase name="Home Page header is present" classname="basic" time="1.478" assertions="2">
 
     
 
     
     </testcase>
   
-    <testcase name="Check if maze is drawn after inserting it in textfield" classname="basic" time="5.320" assertions="1">
+    <testcase name="Check if maze is drawn after inserting it in textfield" classname="basic" time="5.296" assertions="1">
 
     
     </testcase>
   
-    <testcase name="Check if maze instruction is correct" classname="basic" time="1.553" assertions="1">
+    <testcase name="Check if maze instruction is correct" classname="basic" time="2.301" assertions="1">
+
+    
+    </testcase>
+  
+    <testcase name="Check if textarea for drawing maze handles negative case" classname="basic" time="6.863" assertions="2">
+
+    
 
     
     </testcase>

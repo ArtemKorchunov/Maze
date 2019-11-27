@@ -11,6 +11,8 @@ module.exports = {
     goOneStepForwardBtn: "div.GO_ONE_STEP",
     turnLeftBtn: "div.controllers > div.left",
     turnRightBtn: "div.controllers > div.right",
-    winModalWindow: "div.modal"
+    winModalWindow: "div.modal",
+    errorMessage: "div.Toastify__toast--error",
+    textareaModal: "div.ReactModalPortal"
   }
 };

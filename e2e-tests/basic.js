@@ -1,4 +1,4 @@
-const { mazeMock } = require("./mocks");
+const { mazeMock, incorrectMazeMock } = require("./mocks");
 
 module.exports = {
   "Home Page header is present": function(browser) {
@@ -29,6 +29,20 @@ module.exports = {
       .click("@turnLeftBtn")
       .click("@goOneStepForwardBtn")
       .waitForElementVisible("@winModalWindow", 10000)
+      .end();
+  },
+
+  "Check if textarea for drawing maze handles negative case": function(
+    browser
+  ) {
+    const mainPage = browser.page.mainPage();
+
+    mainPage
+      .navigate()
+      .click("@cofigureMazeButton")
+      .setValue("@textarea", incorrectMazeMock)
+      .assert.visible("@textareaModal")
+      .waitForElementVisible("@errorMessage", 10000)
       .end();
   }
 };
